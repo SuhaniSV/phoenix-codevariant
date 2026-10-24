@@ -11,8 +11,10 @@
   const loaderText = document.getElementById("loaderText");
   const frameWarning = document.getElementById("frameWarning");
   const skipIntro = document.getElementById("skipIntro");
-  // The cinematic sequence can still load in the background, while Skip
-  // Intro always remains available for anyone who wants the home page now.
+  // Start every visit at the first cinematic frame. Prevent the browser from
+  // restoring a previous scroll position and accidentally scrubbing the intro.
+  if ("scrollRestoration" in window.history) window.history.scrollRestoration = "manual";
+  window.scrollTo({ top: 0, left: 0, behavior: "auto" });
   document.documentElement.classList.add("intro-loading-lock");
   skipIntro.disabled = false;
   let lenis = null;
@@ -428,3 +430,62 @@
       if (sort === "popular") return b.stars - a.stars;
       return a.id - b.id;
     });
+    const grid = document.getElementById("memorialGardenGrid");
+    grid.innerHTML = "";
+    if (!revived.length) {
+      grid.innerHTML = '<div class="memorial-empty"><span>✦</span><h3>No revived projects found</h3><p>Try a different project name or technology.</p></div>';
+      return;
+    }
+    revived.forEach((project) => {
+      const card = document.createElement("article");
+      card.className = "memorial-card";
+      card.tabIndex = 0;
+      card.setAttribute("role", "button");
+      card.setAttribute("aria-label", `Open ${project.name}`);
+      card.innerHTML = `
+        <div class="memorial-art"><img src="assets/memorial-garden/${escapeHTML(project.gardenArt || "taskflow")}.webp" alt="${escapeHTML(project.name)} revived project garden"></div>
+        <div class="memorial-card-copy"><h3>${escapeHTML(project.name)}</h3><p>${escapeHTML(project.revived || "Recently revived")}</p><span>${escapeHTML(project.gardenTech || project.language)}</span></div>`;
+      const open = () => openProjectDetails(project.id);
+      card.addEventListener("click", open);
+      card.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" || event.key === " ") { event.preventDefault(); open(); }
+      });
+      grid.appendChild(card);
+    });
+  }
+  function renderHallOfFame() {
+    const search = document.getElementById("hallSearch").value.trim().toLowerCase();
+    const sort = document.getElementById("hallSort").value;
+    const launched = projects.filter((project) => {
+      const matchesSearch = !search || `${project.name} ${project.description} ${project.language} ${(project.hallCategories || []).join(" ")}`.toLowerCase().includes(search);
+      const matchesCategory = hallCategory === "all" || (project.hallCategories || []).includes(hallCategory);
+      return project.status === "Hall of Fame" && matchesSearch && matchesCategory;
+    });
+    launched.sort((a, b) => {
+      if (sort === "name") return a.name.localeCompare(b.name);
+      if (sort === "recent") return (a.hallRank || 99) - (b.hallRank || 99);
+      return b.stars - a.stars || a.name.localeCompare(b.name);
+    });
+    const grid = document.getElementById("hallOfFameGrid");
+    grid.innerHTML = "";
+    if (!launched.length) {
+      grid.innerHTML = '<div class="hall-empty"><span>✦</span><h3>No launched projects found</h3><p>Try another category or project name.</p></div>';
+      return;
+    }
+    launched.forEach((project) => {
+      const card = document.createElement("article");
+      card.className = "hall-card";
+      card.tabIndex = 0;
+      card.setAttribute("role", "button");
+      card.setAttribute("aria-label", `Open ${project.name}`);
+      card.innerHTML = `
+        <div class="hall-art hall-art-${escapeHTML(project.hallArt || "mediscan")}" aria-hidden="true"><span class="hall-art-glow"></span><span class="hall-art-title">${escapeHTML(project.language)}</span></div>
+        <div class="hall-card-copy"><h3>${escapeHTML(project.name)}</h3><p>${escapeHTML(project.hallLaunch || "Recently launched")}</p><div class="hall-stats"><span>★ ${project.stars}</span><span>✦ ${project.hallSignals || 0}</span></div></div>`;
+      const open = () => openProjectDetails(project.id);
+      card.addEventListener("click", open);
+      card.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" || event.key === " ") { event.preventDefault(); open(); }
+      });
+      grid.appendChild(card);
+    });
+  }
