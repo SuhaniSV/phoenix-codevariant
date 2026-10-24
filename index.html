@@ -8,11 +8,12 @@
   <meta name="description" content="Discover abandoned open-source projects, explore what they need, and build a practical plan to bring them back to life."><title>PHOENIX — Give Open Source a Second Life</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=DM+Sans:wght@400;500;600;700&family=IM+Fell+English:ital@0;1&family=Metal+Mania&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://unpkg.com/lenis@1.3.27/dist/lenis.css">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
   <link rel="stylesheet" href="style.css?v=phoenix-brand-polish-20261024">
   <link rel="stylesheet" href="revival-enhancements.css?v=phoenix-visible-home-20261024">
+  <link rel="stylesheet" href="canvas-protocol.css?v=variant-factor-unlocked-20261024">
 </head>
 <body>
   <main class="phoenix-app">
@@ -77,8 +78,11 @@
         <div class="ai-message bot"><span class="ai-message-avatar">✦</span><p><b>Suggested first steps</b><br>1. Verify setup and document prerequisites<br>2. Triage open issues and label good first issues<br>3. Fix one high-impact bug<br>4. Add a contribution guide and release checklist</p></div>
       </div>
       <form class="ai-chat-input" id="aiAssistantForm">
-        <input id="aiAssistantInput" type="text" maxlength="240" placeholder="Ask me anything about projects…" aria-label="Message Phoenix AI">
-        <button type="submit" aria-label="Send message">➜</button>
+        <input id="aiAssistantInput" type="text" maxlength="240" placeholder="Ask me anything about projects…" aria-label="Message Phoenix AI" autocomplete="off">
+        <article class="canvas-draft-card ai-draft-card" id="aiMessageDraftCard" data-drag-type="ai-message" data-input-id="aiAssistantInput" draggable="false" hidden>
+          <span class="canvas-card-kicker">MESSAGE CARD</span><strong>Drag to Send Message</strong><small class="canvas-draft-preview">Your message will appear here.</small>
+        </article>
+        <p class="canvas-inline-hint">Type a message, then drag its card to the <b>Send Message</b> zone.</p>
       </form>
     </aside>
 
@@ -114,7 +118,8 @@
           <button class="graveyard-icon-button" type="button" aria-label="Notifications" title="Notifications">♧</button>
           <button class="graveyard-icon-button" type="button" aria-label="Settings" title="Settings">⚙</button>
           <button class="button button-primary small" id="toggleFilters" type="button" aria-expanded="false">Filters</button>
-          <button class="button button-secondary small" id="addProjectButton">＋ Add a project</button><button class="button button-primary small" id="importReposButton">Import from GitHub</button>
+          <button class="button button-secondary small" id="addProjectButton" type="button">＋ Add a project</button>
+          <button class="button button-primary small" id="importReposButton" type="button">Import from GitHub</button>
         </div>
       </div>
       <div id="projectsView">
@@ -173,8 +178,11 @@
             <select id="communityCategory"><option value="Community">Choose a category</option><option>Frontend</option><option>Backend</option><option>AI / ML</option><option>DevOps</option><option>Open Source</option><option>Career & Learning</option><option>Ideas</option></select>
             <label class="community-field-label" for="communityBody">Description <span>*</span></label>
             <textarea id="communityBody" rows="5" maxlength="2000" placeholder="Explain the problem, tech stack, and what you've tried..." required></textarea>
-            <div class="community-form-bottom"><label class="community-notify"><input id="communityNotify" type="checkbox" checked><span>Notify me about new replies</span></label><button class="button button-primary" type="submit">↗ Post question</button></div>
-            <p class="tiny-note">Prototype mode · posts are stored for this session only.</p>
+            <div class="community-form-bottom"><label class="community-notify"><input id="communityNotify" type="checkbox" checked><span>Notify me about new replies</span></label><span class="canvas-inline-hint">Drag the draft below to Publish.</span></div>
+            <article class="canvas-draft-card" id="communityDraftCard" data-drag-type="community-question" draggable="false" aria-live="polite">
+              <span class="canvas-card-kicker">COMMUNITY DRAFT</span><strong>Complete the title and description</strong><small class="canvas-draft-preview">Your question becomes draggable when required fields are ready.</small>
+            </article>
+            <p class="tiny-note">Prototype mode · published posts are stored in this session.</p>
           </form>
           <div class="community-discussions-panel"><div class="community-discussions-heading"><div><p class="eyebrow">FROM THE COMMUNITY</p><h3>Latest discussions</h3></div><label class="community-search"><span>⌕</span><input id="communitySearch" type="search" placeholder="Search discussions..." aria-label="Search discussions"></label></div>
             <div class="community-feed-tabs"><button class="selected" type="button" data-community-sort="latest">✦ Latest</button><button type="button" data-community-sort="helpful">♧ Most helpful</button><button type="button" data-community-sort="hot">↗ Hot</button></div>
@@ -221,19 +229,37 @@
     <footer class="site-footer phoenix-credit-banner"><div class="footer-brand"><img src="assets/icons/phoenix.png" alt=""> PHOENIX</div><div class="phoenix-footer-message"><p>Every last commit deserves another chance.</p><span>Built for the people who believe unfinished ideas still matter.</span></div><div class="phoenix-footer-credit"><i></i> BY SUHANI AND SHUBHANG</div></footer>
   </main>
 
-  <aside class="ai-assistant-panel" id="aiAssistantPanel" aria-labelledby="aiAssistantTitle" hidden>
-    <header class="ai-assistant-header">
-      <div class="ai-assistant-identity"><span class="ai-robot-avatar" aria-hidden="true">◉</span><span><strong id="aiAssistantTitle">PHOENIX AI</strong><small><i></i> Project assistant</small></span></div>
-      <button class="ai-assistant-close" id="aiAssistantClose" type="button" aria-label="Close AI assistant">×</button>
-    </header>
-    <div class="ai-chat-messages" id="aiChatMessages" aria-live="polite"></div>
-    <div class="ai-quick-prompts" aria-label="Suggested questions">
-      <button type="button" data-ai-prompt="Why was this project abandoned?">Why was this project abandoned?</button>
-      <button type="button" data-ai-prompt="What's left to complete?">What's left to complete?</button>
-      <button type="button" data-ai-prompt="Give me a revival plan">Give me a revival plan</button>
+
+    <aside class="canvas-protocol" id="canvasProtocol" aria-label="The Canvas Protocol action zones">
+    <div class="canvas-protocol-heading">
+      <div class="canvas-protocol-brand"><span class="canvas-protocol-mark">✦</span><div><strong>THE CANVAS PROTOCOL</strong><small>Drag a data card into a zone to perform its action</small></div></div>
+      <p id="canvasStatus" class="canvas-status" role="status" aria-live="polite">Ready · Select a project or prepare a draft card.</p>
     </div>
-    <form class="ai-chat-form" id="aiChatForm">
-      <input id="aiChatInput" autocomplete="off" maxlength="220" placeholder="Ask anything about this project..." aria-label="Ask Phoenix AI">
-      <button type="submit" aria-label="Send message">➜</button>
-    </form>
+    <div class="canvas-zones" id="canvasZones">
+      <div class="canvas-zone" data-drop-action="revive" role="region" aria-label="Drop here to revive a project or open its revival plan"><span class="canvas-zone-icon">✦</span><strong>Revive</strong><small>Project / plan</small></div>
+      <div class="canvas-zone" data-drop-action="support" role="region" aria-label="Drop here to support a project"><span class="canvas-zone-icon">♥</span><strong>Support</strong><small>Like a project</small></div>
+      <div class="canvas-zone" data-drop-action="needs-work" role="region" aria-label="Drop here to mark a project as needing work"><span class="canvas-zone-icon">⌁</span><strong>Needs Work</strong><small>Flag for help</small></div>
+      <div class="canvas-zone" data-drop-action="flower" role="region" aria-label="Drop here to leave a flower tribute"><span class="canvas-zone-icon">✿</span><strong>Leave Flower</strong><small>Tribute card</small></div>
+      <div class="canvas-zone" data-drop-action="save" role="region" aria-label="Drop here to save a project or apply changes"><span class="canvas-zone-icon">◇</span><strong>Save</strong><small>Changes / project</small></div>
+      <div class="canvas-zone" data-drop-action="publish" role="region" aria-label="Drop here to publish a community question or discussion"><span class="canvas-zone-icon">↗</span><strong>Publish</strong><small>Community post</small></div>
+      <div class="canvas-zone" data-drop-action="add-project" role="region" aria-label="Drop here to submit a project"><span class="canvas-zone-icon">＋</span><strong>Add Project</strong><small>Project submission</small></div>
+      <div class="canvas-zone" data-drop-action="connect" role="region" aria-label="Drop here to connect or disconnect demo GitHub"><span class="canvas-zone-icon">◉</span><strong>Connect</strong><small>GitHub</small></div>
+      <div class="canvas-zone" data-drop-action="import" role="region" aria-label="Drop here to import selected demo repositories"><span class="canvas-zone-icon">⇩</span><strong>Import</strong><small>Repo cards</small></div>
+      <div class="canvas-zone" data-drop-action="complete-task" role="region" aria-label="Drop here to complete a revival task"><span class="canvas-zone-icon">✓</span><strong>Complete Task</strong><small>Revival work</small></div>
+      <div class="canvas-zone" data-drop-action="send-message" role="region" aria-label="Drop here to send a Phoenix AI message"><span class="canvas-zone-icon">➤</span><strong>Send Message</strong><small>Phoenix AI</small></div>
+    </div>
   </aside>
+
+  <div class="modal-backdrop" id="modalBackdrop" hidden>
+    <section class="modal" id="modalDialog" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal-heading"><h2 id="modalTitle">Dialog</h2><button class="modal-close" id="modalClose" aria-label="Close dialog">×</button></div>
+      <div id="modalContent"></div>
+    </section>
+  </div>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/lenis@1.3.27/dist/lenis.min.js"></script>
+  <script src="supabase-config.js"></script>
+  <script src="script.js?v=variant-factor-unlocked-20261024-v1"></script>
+  <script src="revival-enhancements.js?v=variant-factor-unlocked-20261024-v1"></script>
+</body>
+</html>
