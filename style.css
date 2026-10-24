@@ -9,10 +9,12 @@
 html, body { width: 100%; min-width: 320px; min-height: 100%; margin: 0; }
 html { scroll-behavior: auto; background: #08090d; }
 body { overflow-x: hidden; background: #08090d; }
-
+/* Lenis recommended base styles. These keep the document on native scrolling
+   while Lenis smooths wheel/trackpad input. */
 html.lenis, html.lenis body { height: auto; }
 html.intro-loading-lock, html.intro-loading-lock body { overflow: hidden !important; }
-
+/* Keep native scrolling locked until the first intro frame is ready.
+   The Skip Intro control remains available during loading. */
 .lenis.lenis-smooth { scroll-behavior: auto !important; }
 .lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
 .lenis.lenis-stopped { overflow: hidden; }
@@ -37,7 +39,8 @@ button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visib
 .skip-intro { position: absolute; z-index: 8; right: 24px; top: 24px; padding: 10px 14px; border: 1px solid #ffffff50; border-radius: 999px; background: #09090b80; color: #fff; backdrop-filter: blur(10px); }
 .eyebrow { margin: 0 0 14px; color: #d6c7b1; font-size: 13.8px; font-weight: 700; letter-spacing: .32em; }
 .landing-hero { position: relative; width: 100%; min-height: 100vh; padding: 24px clamp(18px,4vw,64px) 26px; background-color: #080b13; background-image: linear-gradient(90deg,rgba(3,8,18,.7) 0%,rgba(3,8,18,.48) 44%,rgba(3,8,18,.2) 100%),linear-gradient(180deg,rgba(3,8,18,.14) 0%,transparent 38%,rgba(3,8,18,.42) 100%),url("assets/hero-wallpaper.webp"); background-position: center,center,center; background-size: cover,cover,cover; background-repeat: no-repeat; }
-
+/* Keep the landing page hidden until the cinematic sequence has finished.
+   The whole page reveals together, while the navbar, hero, and metrics stagger softly. */
 .landing-hero, .app-content, .site-footer { opacity: 0; transform: translateY(18px); pointer-events: none; transition: opacity 1.35s cubic-bezier(.2,.65,.25,1), transform 1.35s cubic-bezier(.2,.65,.25,1); }
 body.landing-revealed .landing-hero, body.landing-revealed .app-content, body.landing-revealed .site-footer { opacity: 1; transform: translateY(0); pointer-events: auto; }
 body.landing-preview .landing-hero { position: fixed; inset: 0; z-index: 40; width: 100%; height: 100vh; height: 100svh; min-height: 100vh; overflow: hidden; opacity: 1; transform: none; pointer-events: auto; transition: opacity .75s ease; }
@@ -245,7 +248,7 @@ select, .modal input:not([type=checkbox]), .modal textarea, .community-form inpu
 }
 
 
-
+/* Graveyard main view */
 body.graveyard-page .topbar { position: fixed; top: 10px; left: clamp(12px,2.5vw,38px); right: clamp(12px,2.5vw,38px); z-index: 60; min-height: 62px; padding: 7px 14px; border-color: #7190b855; border-radius: 14px; background: rgba(4,12,27,.88); }
 body.graveyard-page .brand { font-size: 26.22px; }
 body.graveyard-page .brand-icon img { width: 40px; height: 40px; }
@@ -314,7 +317,7 @@ body.graveyard-page .graveyard-card .card-action { margin-left:auto; width:auto;
  body.graveyard-page .vote-actions { flex-wrap:wrap; }
 }
 
-
+/* Pixel-matched Graveyard screen */
 body.graveyard-page { --orange:#ff8a3d; }
 body.graveyard-page .app-content { padding:108px clamp(18px,3vw,46px) 68px; background:radial-gradient(ellipse at 52% 0,#13233a 0,#091321 44%,#070d17 100%); }
 body.graveyard-page .content-heading { align-items:center; gap:24px; margin-bottom:20px; }
@@ -391,6 +394,7 @@ body.graveyard-page #toggleFilters { display:inline-flex; }
  body.graveyard-page .graveyard-card, body.graveyard-page .vote-button, body.graveyard-page .graveyard-icon-button { transition:none !important; }
 }
 
+/* Exact, lossless crops from the uploaded Graveyard reference image */
 body.graveyard-page .graveyard-card .project-art { height:auto; aspect-ratio:110 / 171; padding:0; display:block; overflow:hidden; background:none; }
 body.graveyard-page .graveyard-card .project-art::before,
 body.graveyard-page .graveyard-card .project-art::after,
@@ -413,7 +417,7 @@ body.graveyard-page .graveyard-card .vote-button[aria-pressed="true"].dislike { 
  body.graveyard-page .graveyard-card .project-art { height:auto; aspect-ratio:110 / 171; }
 }
 
-
+/* Independent, non-scrolling dashboard pages after the landing screen */
 .topbar { position:fixed; top:10px; left:clamp(12px,2.5vw,38px); right:clamp(12px,2.5vw,38px); z-index:60; }
 .landing-hero { padding-top:108px; }
 body.page-view-open { overflow:hidden; }
@@ -465,7 +469,7 @@ body.page-view-open .map-panel { margin-top:8px; }
  body.graveyard-page .graveyard-engraving strong { font-size:17.94px; }
 }
 
-
+/* Project details are engraved directly inside each tombstone. */
 body.graveyard-page .graveyard-card .graveyard-engraving {
   display:flex !important;
   top:54%;
@@ -511,7 +515,7 @@ body.graveyard-page .graveyard-engraving span {
 }
 
 
-
+/* Dedicated project tombstone detail screen */
 body.project-detail-page .content-heading,
 body.project-detail-page #projectsView,
 body.project-detail-page .filter-row { display:none !important; }
@@ -604,7 +608,7 @@ body.project-detail-page .app-content { padding-top:92px; }
   .detail-tomb-engraving { width:52%; }
 }
 
-
+/* Phoenix AI assistant on the landing page */
 .ai-assistant-button {
   display:grid; place-items:center; width:46px; height:46px; flex:0 0 46px; overflow:hidden;
   padding:0; border:1px solid rgba(123,208,255,.75); border-radius:50%;
@@ -806,7 +810,7 @@ body.hall-of-fame-page .app-content {
   .hall-of-fame-grid { grid-template-columns:1fr; gap:12px; }
 }
 
-
+/* User-provided World Cemetery dashboard visual, kept as one exact image. */
 body.map-page .content-heading { display:none !important; }
 body.map-page .app-content { padding-top:100px; background:#07111d; }
 body.map-page .map-dashboard { width:min(1644px,100%); margin:0 auto; }
@@ -826,7 +830,7 @@ body.map-page .map-dashboard { width:min(1644px,100%); margin:0 auto; }
 @media (max-width:520px) { .map-hotspot { width:10px; height:10px; } .map-zoom-controls { right:10px; bottom:10px; } .map-zoom-controls button { width:32px; height:31px; } }
 
 
-
+/* Profile dropdown */
 .profile-menu-wrap { position: relative; flex-shrink: 0; }
 .profile-button { cursor: pointer; color: #f3dfc5; transition: border-color .2s, background .2s, transform .2s; }
 .profile-button:hover, .profile-button[aria-expanded="true"] { border-color: #d9ad79; background: #344158; }
@@ -847,6 +851,7 @@ body.map-page .map-dashboard { width:min(1644px,100%); margin:0 auto; }
 .profile-menu-connect > span:first-child { color: #9fd6a8; }
 @media (max-width: 600px) { .profile-dropdown { position: fixed; top: 72px; right: 12px; width: min(290px, calc(100vw - 24px)); } }
 
+/* Profile workspace */
 .profile-overview { display: grid; gap: 18px; }
 .profile-overview-hero { display: grid; grid-template-columns: 68px minmax(0,1fr) auto; align-items: center; gap: 14px; }
 .profile-large-avatar { display: grid; place-items: center; width: 68px; height: 68px; border: 1px solid #e5b67685; border-radius: 50%; background: radial-gradient(circle at 30% 22%,#3e506f,#182235); box-shadow: 0 0 28px #e89a3e22; font-size: 42.78px; }
@@ -886,6 +891,7 @@ body.map-page .map-dashboard { width:min(1644px,100%); margin:0 auto; }
 @media (max-width: 520px) { .profile-overview-hero { grid-template-columns: 56px minmax(0,1fr); } .profile-large-avatar { width: 56px; height: 56px; font-size: 35.88px; } .profile-edit-button { grid-column: 1 / -1; justify-self: start; } .profile-stat-grid { gap: 6px; } .profile-stat-grid > div { padding: 10px 6px; } }
 
 
+/* Leaflet interactive world map */
 body.map-page .map-dashboard { max-width: 1500px; }
 .interactive-map-toolbar { display:flex; justify-content:space-between; align-items:center; gap:18px; margin-bottom:16px; padding:18px 20px; border:1px solid rgba(145,173,210,.22); border-radius:14px; background:linear-gradient(120deg,rgba(15,32,56,.96),rgba(10,20,37,.96)); }
 .interactive-map-toolbar strong { color:#f4f7ff; font-size:20.7px; }
@@ -910,6 +916,7 @@ body.map-page .map-dashboard { max-width: 1500px; }
 @media(max-width:650px) { .interactive-map-toolbar { align-items:flex-start; flex-direction:column; padding:15px; } .map-legend { flex-wrap:wrap; white-space:normal; } #interactiveMap { height:58vh; min-height:340px; } }
 
 
+/* Supabase project submission form */
 .form-grid-two {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -928,6 +935,7 @@ body.map-page .map-dashboard { max-width: 1500px; }
 }
 
 
+/* World map: glowing hover dots plus a compact country summary panel */
 .map-explorer-layout { display:grid; grid-template-columns:minmax(0,1fr) 240px; gap:14px; align-items:stretch; }
 .map-explorer-layout .map-image-stage { min-width:0; }
 .country-project-panel { padding:20px 17px; border:1px solid rgba(120,160,210,.24); border-radius:14px; background:linear-gradient(160deg,#0b1628,#080f1d); color:#eef3ff; }
@@ -945,10 +953,11 @@ body.map-page .map-dashboard { max-width: 1500px; }
 @media(max-width:900px) { .map-explorer-layout { grid-template-columns:minmax(0,1fr) 205px; } .country-project-panel { padding:16px 12px; } }
 @media(max-width:650px) { .map-explorer-layout { grid-template-columns:1fr; } .country-project-panel { padding:16px; } .country-project-list { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:13px; } .country-panel-footnote { margin-top:15px; } }
 
-
+/* The header search next to the Phoenix AI assistant is intentionally hidden. */
 .nav-search { display: none !important; }
 
 
+/* Contributor leaderboard alongside the World Cemetery map */
 .map-sidebar-divider { height:1px; margin:20px 0; background:rgba(120,160,210,.22); }
 .map-leaderboard h3 { margin:0; font-size:23.46px; letter-spacing:-.02em; }
 .leaderboard-list { list-style:none; padding:0; margin:14px 0 0; display:grid; gap:14px; }
@@ -962,7 +971,7 @@ body.map-page .map-dashboard { max-width: 1500px; }
 @media(max-width:650px) { .leaderboard-list { grid-template-columns:1fr; } }
 
 
-
+/* Profile setting: respect the user's reduced-motion preference. */
 html.phoenix-reduce-motion *,
 html.phoenix-reduce-motion *::before,
 html.phoenix-reduce-motion *::after {
@@ -973,7 +982,7 @@ html.phoenix-reduce-motion *::after {
 }
 
 
-
+/* Match Graveyard card sizing to the tall Memorial Garden cards */
 body.graveyard-page .project-grid {
   width: min(1280px, 100%);
   margin-inline: auto;
@@ -1002,6 +1011,7 @@ body.graveyard-page .graveyard-card .project-card-body {
 }
 
 
+/* Final Graveyard alignment: match Memorial Garden card frame, grid and placement */
 body.graveyard-page .app-content {
   padding-top: 96px;
 }
@@ -1056,6 +1066,7 @@ body.graveyard-page .graveyard-card .project-card-body > p {
 }
 
 
+/* Keep the Phoenix top bar the same size and position on every page, matching Graveyard */
 .topbar,
 body.graveyard-page .topbar {
   position: fixed;
@@ -1092,6 +1103,7 @@ body.graveyard-page .topbar {
 }
 
 
+/* Make the Project Graveyard heading match Memorial Garden's heading layout */
 body.graveyard-page .content-heading {
   display:flex;
   align-items:center;
@@ -1132,6 +1144,7 @@ body.graveyard-page .heading-actions {
 }
 
 
+/* Enforce Memorial Garden typography on the Graveyard title block */
 body.graveyard-page #appContent > .content-heading {
   width: min(1260px, 100%) !important;
   margin: 0 auto 20px !important;
@@ -1167,7 +1180,7 @@ body.graveyard-page #appContent > .content-heading #pageDescription {
 }
 
 
-
+/* Keep the Graveyard eyebrow visible, matching the Memorial Garden heading */
 body.graveyard-page #appContent > .content-heading .graveyard-heading .eyebrow {
   display: block !important;
   margin: 0 0 5px !important;
@@ -1179,7 +1192,7 @@ body.graveyard-page #appContent > .content-heading .graveyard-heading .eyebrow {
 }
 
 
-
+/* Match Hall of Fame layout, spacing and heading position to Project Graveyard */
 body.hall-of-fame-page .app-content {
   padding: 108px clamp(18px, 3vw, 46px) 68px !important;
 }
@@ -1220,7 +1233,7 @@ body.hall-of-fame-page .hall-of-fame-grid {
 }
 
 
-
+/* Make Hall of Fame project cards the same compact size as Graveyard cards */
 body.hall-of-fame-page .hall-of-fame-view {
   width: 100% !important;
   max-width: none !important;
@@ -1267,7 +1280,7 @@ body.hall-of-fame-page .hall-stats {
 }
 
 
-
+/* Final exact layout match: Hall of Fame cards use Graveyard's four-column sizing and art ratio */
 body.hall-of-fame-page .hall-of-fame-view {
   width: 100% !important;
   max-width: none !important;
@@ -1316,7 +1329,7 @@ body.hall-of-fame-page .hall-stats {
 }
 
 
-
+/* Requested Graveyard layout refinement: 4 desktop cards, 12px grid, tall portrait art, compact copy */
 body.graveyard-page #projectGrid.project-grid {
   width: min(1260px, 100%);
   margin: 0 auto;
@@ -1360,6 +1373,7 @@ body.graveyard-page #projectGrid .graveyard-card .project-card-body > p {
 }
 
 
+/* Hall of Fame: match the Graveyard card grid, portrait artwork, and compact card copy */
 body.hall-of-fame-page .hall-of-fame-view {
   width: min(1260px, 100%) !important;
   max-width: 100% !important;
@@ -1428,7 +1442,7 @@ body.hall-of-fame-page .hall-stats {
 }
 
 
-
+/* Home navigation opens the landing page directly instead of the black intro screen. */
 body.home-direct .intro-sequence { display: none !important; }
 body.home-direct .landing-hero,
 body.home-direct .site-footer { opacity: 1; transform: none; pointer-events: auto; }
@@ -1437,7 +1451,7 @@ body.home-direct .hero-content,
 body.home-direct .metrics-bar { opacity: 1; transform: none; pointer-events: auto; }
 
 
-
+/* Community page refinement */
 .community-layout {
   align-items: start;
   grid-template-columns: minmax(320px, .9fr) minmax(0, 1.1fr);
@@ -1533,7 +1547,7 @@ body.home-direct .metrics-bar { opacity: 1; transform: none; pointer-events: aut
 }
 
 
-
+/* Phoenix Community — complete visual refresh */
 .community-page { width: 100%; color: #f6f5f8; }
 .community-hero { position: relative; display: flex; align-items: center; justify-content: space-between; gap: 26px; min-height: 245px; margin: 0 0 22px; padding: 28px clamp(22px,3vw,44px); overflow: hidden; border: 1px solid #ffad3524; border-radius: 20px; background: radial-gradient(ellipse at 70% 50%,#8b390c55,transparent 33%),radial-gradient(ellipse at 95% 15%,#5d1e1c55,transparent 45%),linear-gradient(110deg,#10131d 0%,#17111a 56%,#24120f 100%); }
 .community-hero::before { position:absolute; inset:0; background:linear-gradient(90deg,#0b0d15 0%,#0b0d15d9 42%,transparent 100%); content:""; pointer-events:none; }
@@ -1595,7 +1609,7 @@ body.home-direct .metrics-bar { opacity: 1; transform: none; pointer-events: aut
 @media(max-width:560px){.community-hero{padding:23px 18px}.community-hero-art{right:-20px;transform:scale(.7);transform-origin:right center}.community-hero-copy h2{font-size:42.78px}.community-stats{grid-template-columns:repeat(3,minmax(0,1fr));min-width:0;padding:13px}.community-stats strong{font-size:24.84px}.community-form{padding:18px}.community-discussions-panel{padding:13px}.community-more{grid-template-columns:1fr 1fr}.community-form-bottom{align-items:stretch;flex-direction:column}.community-form-bottom .button{width:100%}}
 
 
-
+/* Wide cinematic Phoenix Community banner */
 .community-banner { min-height:clamp(255px,27vw,370px); padding:clamp(24px,3.5vw,52px); margin-bottom:24px; align-items:center; border-radius:0; border-left:0; border-right:0; border-color:#ff9b2228; background:radial-gradient(ellipse at 67% 47%,#ff76004d 0%,#7b210d24 19%,transparent 42%),radial-gradient(ellipse at 94% 85%,#f05b1230,transparent 28%),radial-gradient(ellipse at 47% 5%,#2a143d55,transparent 30%),linear-gradient(100deg,#05070d 0%,#090911 43%,#140b10 72%,#070910 100%); }
 .community-banner::before { background:linear-gradient(90deg,#05070df5 0%,#05070ddf 35%,#05070d30 67%,#05070d42 100%); }
 .community-banner::after { position:absolute; inset:0; content:""; opacity:.35; pointer-events:none; background-image:radial-gradient(circle at 68% 20%,#ffb344 0 1px,transparent 2px),radial-gradient(circle at 78% 64%,#ff7028 0 1px,transparent 2px),radial-gradient(circle at 59% 74%,#ff9b28 0 1px,transparent 2px),radial-gradient(circle at 88% 30%,#ffcf7c 0 1px,transparent 2px); background-size:137px 91px,113px 127px,171px 119px,149px 107px; }
@@ -1622,8 +1636,7 @@ body.home-direct .metrics-bar { opacity: 1; transform: none; pointer-events: aut
 @media(max-width:760px){.community-banner{min-height:300px;padding:25px 18px}.community-banner .community-hero-copy{max-width:100%}.community-banner .community-hero-art{right:-9%;width:45%;opacity:.24}.community-banner-motto{display:none}.community-banner .community-hero-copy h2{font-size:clamp(57.96px,13.8vw,80.04px)}.community-banner .community-hero-pills{max-width:100%;gap:7px;margin-top:18px}.community-banner .community-hero-pills button{min-height:36px;padding:7px 10px;font-size:13.8px}.community-banner .community-hero-pills button span{font-size:17.94px}}
 
 
-
-
+/* Phoenix landing page — cinematic typography and polished hero */
 :root { --phoenix-gold:#ffb33f; --phoenix-amber:#ff8417; }
 body { font-family:"DM Sans",Inter,system-ui,sans-serif; font-optical-sizing:auto; -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility; }
 .topbar { min-height:68px; padding:8px 18px; border-color:#eeb96b38; border-radius:18px; background:linear-gradient(105deg,#050913eF,#07101edb 65%,#090a12eF); box-shadow:0 10px 40px #0005, inset 0 1px #ffffff0c; }
@@ -1662,7 +1675,7 @@ body { font-family:"DM Sans",Inter,system-ui,sans-serif; font-optical-sizing:aut
 @media(max-width:430px){.topbar{gap:7px}.brand{gap:5px;font-size:19.32px}.brand-icon img{width:29px;height:29px}.nav-link{padding:8px 5px;font-size:12.42px}.hero-copy h2{font-size:55.2px}.hero-actions{align-items:stretch;flex-direction:column;max-width:260px}.metric{gap:8px}.metric-icon{width:30px;height:30px}.metric strong{font-size:24.84px}}
 
 
-
+/* High-contrast landing refresh */
 #landing.landing-hero{position:relative!important;isolation:isolate;min-height:calc(100svh - 76px)!important;padding:clamp(20px,2.6vw,42px) clamp(22px,3.3vw,60px) 24px!important;background-color:#07101e!important;background-image:linear-gradient(90deg,rgba(2,6,14,.88),rgba(3,8,18,.72) 36%,rgba(3,8,18,.24) 73%,rgba(3,8,18,.3)),linear-gradient(180deg,rgba(4,9,19,.04),transparent 50%,rgba(4,9,19,.72)),url("assets/hero-wallpaper.webp")!important;background-size:cover,cover,cover!important;background-position:center,center,center 46%!important}
 #landing .hero-content{min-height:clamp(480px,67vh,700px)!important;display:flex;align-items:center}
 #landing .hero-copy{max-width:min(760px,63vw)!important;padding:clamp(35px,5vh,70px) 0 35px!important}
@@ -1683,7 +1696,7 @@ body { font-family:"DM Sans",Inter,system-ui,sans-serif; font-optical-sizing:aut
 @media(max-width:430px){#landing .hero-copy h2{font-size:55.2px!important}#landing .hero-actions{align-items:stretch;flex-direction:column;max-width:270px}}
 
 
-
+/* Community hero: cinematic Phoenix artwork */
 .community-banner.community-hero { isolation:isolate; }
 .community-banner.community-hero::before {
   z-index:1;
@@ -1706,7 +1719,7 @@ body { font-family:"DM Sans",Inter,system-ui,sans-serif; font-optical-sizing:aut
 }
 
 
-
+/* Cinematic Phoenix signature banner at the very bottom of the site */
 .site-footer.phoenix-credit-banner {
   position:relative; isolation:isolate; overflow:hidden;
   display:grid; grid-template-columns:minmax(180px, .8fr) minmax(300px,1.5fr) auto;
@@ -1755,7 +1768,7 @@ body { font-family:"DM Sans",Inter,system-ui,sans-serif; font-optical-sizing:aut
 }
 
 
-
+/* Refined PHOENIX wordmark and avatar treatment */
 .topbar .brand {
   gap:12px;
   font-family:"Cinzel",Georgia,serif!important;
@@ -1803,7 +1816,7 @@ body { font-family:"DM Sans",Inter,system-ui,sans-serif; font-optical-sizing:aut
 }
 
 
-
+/* PHOENIX UI polish — clearer hierarchy, warmer accent, and responsive controls */
 :root{--panel:#14171c;--border:#2a3039;--orange:#ff7138;--gold:#ffb36b;--muted:#a0a8b5;color:#f5f7fa;background:#0b0d10}
 body,html{background-color:#0b0d10}
 .landing-hero{background-image:linear-gradient(90deg,rgba(7,10,15,.94) 0%,rgba(7,10,15,.78) 43%,rgba(7,10,15,.32) 100%),linear-gradient(180deg,rgba(7,10,15,.12) 0%,rgba(7,10,15,.06) 55%,#0b0d10 100%),url("assets/hero-wallpaper.webp")}
@@ -1857,7 +1870,7 @@ input:focus-visible,textarea:focus-visible,select:focus-visible,button:focus-vis
 }
 
 
-
+/* Phoenix UI consistency: shared fixed navigation and comfortable filter spacing */
 .topbar {
   position: fixed;
   top: 10px;
@@ -1925,7 +1938,7 @@ body.project-detail-page .topbar {
   }
 }
 
-
+/* Project workflow refinements: shared Phoenix AI access and clear GitHub CTAs. */
 body.page-view-open .ai-assistant-button {
   display: grid !important;
 }
@@ -1933,7 +1946,7 @@ body.page-view-open .ai-assistant-panel {
   display: flex;
 }
 
-
+/* Project submission/import actions belong to the Graveyard, not Community or other views. */
 body:not(.graveyard-page) .heading-actions > #addProjectButton,
 body:not(.graveyard-page) .heading-actions > #importReposButton {
   display: none !important;
@@ -1994,7 +2007,7 @@ body.graveyard-page .graveyard-card .project-card-body > .start-working-button {
 .detail-start-working { align-self: flex-start; }
 .detail-actions-row { align-items: center; }
 
-
+/* Give the fixed navigation enough breathing room without leaving a large blank band. */
 body.page-view-open .app-content {
   padding-top: 116px !important;
 }
@@ -2022,3 +2035,21 @@ body.map-page .app-content {
   }
   .detail-start-working { align-self: stretch; }
 }
+
+/* Canvas Protocol landing actions: draggable cards instead of primary buttons. */
+#landing .canvas-hero-actions { display:flex; flex-wrap:wrap; gap:13px; margin-top:24px; }
+#landing .hero-action-card { display:flex; align-items:center; gap:13px; min-width:230px; padding:14px 17px; border:1px solid #ffcf78a8; border-radius:13px; background:linear-gradient(110deg,#ffd366,#ff9d1c 70%,#ff8410); color:#17100a; box-shadow:0 9px 28px #ff8e2438,inset 0 1px #fff9; cursor:grab; user-select:none; transition:transform .2s,box-shadow .2s,border-color .2s; }
+#landing .hero-action-card:hover,#landing .hero-action-card:focus-visible { transform:translateY(-2px); box-shadow:0 12px 34px #ff950055,inset 0 1px #fff9; outline:2px solid #ffd176; outline-offset:3px; }
+#landing .hero-action-card:active { cursor:grabbing; }
+#landing .hero-action-card > span:nth-child(2) { display:flex; flex-direction:column; gap:3px; }
+#landing .hero-action-card strong { font-family:"DM Sans",sans-serif; font-size:17px; font-weight:800; }
+#landing .hero-action-card small { font-size:12px; opacity:.78; }
+#landing .hero-action-icon { display:grid; place-items:center; width:35px; height:35px; border-radius:10px; background:#1b130d18; font-size:23px; }
+#landing .hero-action-card .hero-drag-grip { margin-left:auto; font-size:21px; opacity:.55; }
+#landing .hero-action-card-secondary { color:#f7f7fa; background:rgba(5,10,20,.82); border-color:#ffffff3b; box-shadow:inset 0 1px #ffffff12; backdrop-filter:blur(12px); }
+#landing .hero-action-card-secondary .hero-action-icon { background:#ffffff12; }
+#landing .hero-action-card-secondary:hover,#landing .hero-action-card-secondary:focus-visible { border-color:#ffbd5b88; }
+.canvas-zone-explore { border-color:#ffbd5b77!important; }
+.canvas-zone-explore .canvas-zone-icon { color:#ffca70!important; }
+@media(max-width:760px){#landing .canvas-hero-actions{gap:9px}#landing .hero-action-card{min-width:0;flex:1 1 220px;padding:12px}#landing .hero-action-card strong{font-size:15px}}
+@media(max-width:430px){#landing .canvas-hero-actions{align-items:stretch;flex-direction:column;max-width:300px}#landing .hero-action-card{width:100%;flex:none}}
