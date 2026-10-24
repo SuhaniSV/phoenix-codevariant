@@ -1,3 +1,29 @@
+* { box-sizing: border-box; }
+:root {
+  color-scheme: dark;
+  font-family: "DM Sans", Arial, sans-serif;
+  color: #f8fafc;
+  background: #08090d;
+  --panel: #141418; --border: #292933; --orange: #ff7a00; --gold: #ffb703; --muted: #a1a1aa;
+}
+html, body { width: 100%; min-width: 320px; min-height: 100%; margin: 0; }
+html { scroll-behavior: auto; background: #08090d; }
+body { overflow-x: hidden; background: #08090d; }
+/* Lenis recommended base styles. These keep the document on native scrolling
+   while Lenis smooths wheel/trackpad input. */
+html.lenis, html.lenis body { height: auto; }
+html.intro-loading-lock, html.intro-loading-lock body { overflow: hidden !important; }
+/* Keep native scrolling locked until the first intro frame is ready.
+   The Skip Intro control remains available during loading. */
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+.lenis.lenis-stopped { overflow: hidden; }
+.lenis.lenis-smooth iframe { pointer-events: none; }
+button, input, textarea, select { font: inherit; }
+button, a { -webkit-tap-highlight-color: transparent; }
+button { cursor: pointer; }
+button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+[hidden] { display: none !important; }
 .phoenix-app { width: 100%; min-height: 100vh; overflow: clip; }
 .intro-sequence { position: relative; width: 100%; height: 300vh; background: #08090d; }
 .intro-stage { position: sticky; top: 0; width: 100%; height: 100vh; height: 100svh; overflow: hidden; background: #08090d; isolation: isolate; }
@@ -13,22 +39,8 @@
 .skip-intro { position: absolute; z-index: 8; right: 24px; top: 24px; padding: 10px 14px; border: 1px solid #ffffff50; border-radius: 999px; background: #09090b80; color: #fff; backdrop-filter: blur(10px); }
 .eyebrow { margin: 0 0 14px; color: #d6c7b1; font-size: 10px; font-weight: 700; letter-spacing: .32em; }
 .landing-hero { position: relative; width: 100%; min-height: 100vh; padding: 24px clamp(18px,4vw,64px) 26px; background-color: #080b13; background-image: linear-gradient(90deg,rgba(3,8,18,.7) 0%,rgba(3,8,18,.48) 44%,rgba(3,8,18,.2) 100%),linear-gradient(180deg,rgba(3,8,18,.14) 0%,transparent 38%,rgba(3,8,18,.42) 100%),url("assets/hero-wallpaper.webp"); background-position: center,center,center; background-size: cover,cover,cover; background-repeat: no-repeat; }
-
-.landing-hero, .app-content, .site-footer { opacity: 0; transform: translateY(18px); pointer-events: none; transition: opacity 1.35s cubic-bezier(.2,.65,.25,1), transform 1.35s cubic-bezier(.2,.65,.25,1); }
-body.landing-revealed .landing-hero, body.landing-revealed .app-content, body.landing-revealed .site-footer { opacity: 1; transform: translateY(0); pointer-events: auto; }
-body.landing-preview .landing-hero { position: fixed; inset: 0; z-index: 40; width: 100%; height: 100vh; height: 100svh; min-height: 100vh; overflow: hidden; opacity: 1; transform: none; pointer-events: auto; transition: opacity .75s ease; }
-
-.topbar, .hero-content, .metrics-bar { opacity: 0; transform: translateY(18px); pointer-events: none; transition: opacity 1.1s ease, transform 1.1s cubic-bezier(.2,.65,.25,1); }
-body.landing-revealed .topbar, body.landing-revealed .hero-content, body.landing-revealed .metrics-bar { opacity: 1; transform: translateY(0); pointer-events: auto; }
-body.landing-preview .topbar, body.landing-preview .hero-content, body.landing-preview .metrics-bar { opacity: 1; transform: translateY(0); pointer-events: auto; }
-body.landing-preview .topbar { transition-delay: .04s; }
-body.landing-preview .hero-content { transition-delay: .12s; }
-body.landing-preview .metrics-bar { transition-delay: .2s; }
-
-body.landing-revealed .topbar { transition-delay: .12s; }
-body.landing-revealed .hero-content { transition-delay: .34s; }
-.landing-hero { position: relative; width: 100%; min-height: 100vh; padding: 24px clamp(18px,4vw,64px) 26px; background-color: #080b13; background-image: linear-gradient(90deg,rgba(3,8,18,.7) 0%,rgba(3,8,18,.48) 44%,rgba(3,8,18,.2) 100%),linear-gradient(180deg,rgba(3,8,18,.14) 0%,transparent 38%,rgba(3,8,18,.42) 100%),url("assets/hero-wallpaper.webp"); background-position: center,center,center; background-size: cover,cover,cover; background-repeat: no-repeat; }
-
+/* Keep the landing page hidden until the cinematic sequence has finished.
+   The whole page reveals together, while the navbar, hero, and metrics stagger softly. */
 .landing-hero, .app-content, .site-footer { opacity: 0; transform: translateY(18px); pointer-events: none; transition: opacity 1.35s cubic-bezier(.2,.65,.25,1), transform 1.35s cubic-bezier(.2,.65,.25,1); }
 body.landing-revealed .landing-hero, body.landing-revealed .app-content, body.landing-revealed .site-footer { opacity: 1; transform: translateY(0); pointer-events: auto; }
 body.landing-preview .landing-hero { position: fixed; inset: 0; z-index: 40; width: 100%; height: 100vh; height: 100svh; min-height: 100vh; overflow: hidden; opacity: 1; transform: none; pointer-events: auto; transition: opacity .75s ease; }
@@ -81,36 +93,6 @@ body.landing-revealed .metrics-bar { transition-delay: .56s; }
 .metric small { margin-top: 7px; color: #cbd5e1; font-size: 16px; }
 .hero-footnote { padding-top: 10px; color: #b7c0ce; text-align: right; font-size: 10px; }
 .app-content { min-height: 700px; padding: 90px clamp(18px,5vw,76px); background: radial-gradient(ellipse at top,#151923 0%,#09090b 50%); }
-.content-heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; margin-bottom: 32px; }
-.content-heading h2 { margin: 0; font: 600 clamp(2rem,4vw,3.4rem)/1.15 "Playfair Display", Georgia, serif; }
-.muted { color: var(--muted); line-height: 1.65; }
-.content-heading .muted { max-width: 650px; margin-bottom: 0; }
-.heading-actions { display: flex; flex-wrap: wrap; gap: 10px; }
-.filter-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 24px; }
-.filter-tabs { display: flex; flex-wrap: wrap; gap: 6px; }
-.filter-tab { padding: 10px 13px; border: 1px solid transparent; border-radius: 9px; background: transparent; color: #b7b7c2; font-size: 12px; }
-.filter-tab.selected, .filter-tab:hover { border-color: #ff7a004d; background: #ff7a0018; color: #ffbd78; }
-select, .modal input:not([type=checkbox]), .modal textarea, .community-form input, .community-form textarea { width: 100%; padding: 12px 13px; border: 1px solid var(--border); border-radius: 10px; background: #0d0d12; color: #f8fafc; }
-.filter-row select { width: auto; min-width: 150px; }
-.project-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 20px; }
-.project-card { overflow: hidden; border: 1px solid #292933; border-radius: 16px; background: #141418; transition: transform .22s,border-color .22s,box-shadow .22s; }
-.project-card:hover { transform: translateY(-5px); border-color: #ff7a0066; box-shadow: 0 16px 42px #0004; }
-.project-art { position: relative; display: grid; height: 190px; place-items: center; overflow: hidden; background: radial-gradient(ellipse at 50% 85%,#c46b323b,transparent 40%),linear-gradient(180deg,#111c33,#182239 55%,#101014); }
-.project-art::before, .project-art::after { position: absolute; bottom: 0; width: 45%; height: 78%; border: 2px solid #c5a78350; border-bottom: 0; border-radius: 48% 48% 0 0; content: ""; }
-.project-art::after { width: 25%; height: 60%; border-color: #ffb45d55; }
-.art-1 { background: radial-gradient(circle at 70% 22%,#dce9ff55 0 6%,transparent 7%),linear-gradient(180deg,#10223d,#202b3c 58%,#131216); }
-.art-2 { background: radial-gradient(ellipse at 50% 100%,#1d5c3c66,transparent 45%),linear-gradient(180deg,#171d31,#1c2e34 60%,#101014); }
-.art-3 { background: radial-gradient(ellipse at 50% 100%,#ff7a0033,transparent 45%),linear-gradient(180deg,#1a1b34,#3b2830 60%,#101014); }
-.art-moon { position: absolute; top: 20px; right: 22%; width: 42px; height: 42px; border-radius: 50%; background: #d8e6ffcc; box-shadow: 0 0 30px #8dbbff55; }
-.art-gate { z-index: 1; color: #d2aa7b; font-size: 48px; text-shadow: 0 0 25px #ff9b4666; }
-.art-candle { position: absolute; right: 22px; bottom: 12px; z-index: 2; font-size: 23px; }
-.project-status { position: absolute; top: 12px; left: 12px; z-index: 2; padding: 6px 8px; border: 1px solid #ffffff2a; border-radius: 6px; background: #09090bc9; color: #f3d7b6; font-size: 10px; }
-.project-card-body { padding: 18px; }
-.project-title-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-.project-title-row h3 { margin: 0; font-size: 17px; }
-.language-dot { display: grid; width: 28px; height: 28px; place-items: center; border: 1px solid #ffffff20; border-radius: 50%; background: #252530; color: #e6c9a5; font-size: 9px; }
-.project-card-body > p { min-height: 66px; color: #a1a1aa; font-size: 12px; line-height: 1.6; }
-.project-meta { display: flex; justify-content: space-between; color: #b7b7c2; font-size: 11px; }
 .content-heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; margin-bottom: 32px; }
 .content-heading h2 { margin: 0; font: 600 clamp(2rem,4vw,3.4rem)/1.15 "Playfair Display", Georgia, serif; }
 .muted { color: var(--muted); line-height: 1.65; }

@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#080b13">
+  <link rel="icon" type="image/svg+xml" href="assets/phoenix-favicon.svg">
   <meta name="description" content="Discover abandoned open-source projects, explore what they need, and build a practical plan to bring them back to life."><title>PHOENIX — Give Open Source a Second Life</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -30,7 +31,7 @@
       </div>
     </section>
 
- <header class="topbar">
+    <header class="topbar">
       <a class="brand" href="#landing" id="brandHome"><span class="brand-icon"><img src="assets/phoenix-emblem.webp" alt=""></span><span>PHOENIX</span></a>
       <nav class="main-nav" aria-label="Main navigation">
         <button class="nav-link active" data-page="Home">Home</button>
@@ -105,7 +106,6 @@
       <div class="hero-footnote">Demo content is illustrative. Connect a backend to show live platform metrics.</div>
     </section>
 
-    
     <section id="appContent" class="app-content" hidden>
       <div class="content-heading">
         <div class="graveyard-heading"><p class="eyebrow">PHOENIX · ABANDONED PROJECT</p><h2 id="pageTitle">Projects waiting for a second chance</h2><p class="muted" id="pageDescription">Find unfinished ideas worth saving and contributors ready to help.</p></div>
@@ -122,7 +122,6 @@
           <div class="filter-tabs">
             <button class="filter-tab selected" data-filter="Home">All projects</button>
             <button class="filter-tab" data-filter="Graveyard">Graveyard</button>
-            <button class="filter-tab" data-filter="Under Revival">Under Revival</button>
             <button class="filter-tab" data-filter="Memorial Garden">Memorial Garden</button>
             <button class="filter-tab" data-filter="Hall of Fame">Hall of Fame</button>
           </div>
@@ -130,6 +129,90 @@
         </div>
         <div class="project-grid" id="projectGrid"></div>
       </div>
+      <section id="memorialGardenView" class="memorial-garden-view" hidden aria-label="Memorial Garden">
+        <div class="memorial-garden-heading">
+          <div><p class="eyebrow">PHOENIX · REVIVED PROJECTS</p><h2>Memorial Garden</h2><p>Projects that were brought back to life.</p></div>
+          <div class="memorial-garden-tools">
+            <label class="memorial-search"><span>⌕</span><input id="memorialSearch" type="search" placeholder="Search revived projects..." aria-label="Search revived projects"></label>
+            <label class="memorial-sort"><span>Sort by</span><select id="memorialSort" aria-label="Sort revived projects"><option value="recent">Recently revived</option><option value="popular">Most liked</option><option value="name">Name A–Z</option></select></label>
+          </div>
+        </div>
+        <div class="memorial-garden-grid" id="memorialGardenGrid"></div>
+      </section>
+      <section id="hallOfFameView" class="hall-of-fame-view" hidden aria-label="Hall of Fame">
+        <div class="hall-of-fame-heading">
+          <div><p class="eyebrow">PHOENIX · LAUNCHED PROJECTS</p><h2>Hall of Fame</h2><p>Successfully launched projects.</p></div>
+          <div class="hall-of-fame-tools">
+            <label class="hall-search"><span>⌕</span><input id="hallSearch" type="search" placeholder="Search launched projects..." aria-label="Search launched projects"></label>
+            <label class="hall-sort"><span>Sort by</span><select id="hallSort" aria-label="Sort launched projects"><option value="popular">Most liked</option><option value="recent">Recently launched</option><option value="name">Name A–Z</option></select></label>
+          </div>
+        </div>
+        <div class="hall-category-tabs" role="group" aria-label="Hall of Fame categories">
+          <button class="hall-category selected" type="button" data-hall-category="all">All</button>
+          <button class="hall-category" type="button" data-hall-category="web">Web Apps</button>
+          <button class="hall-category" type="button" data-hall-category="mobile">Mobile Apps</button>
+          <button class="hall-category" type="button" data-hall-category="open-source">Open Source</button>
+          <button class="hall-category" type="button" data-hall-category="featured">Featured</button>
+        </div>
+        <div class="hall-of-fame-grid" id="hallOfFameGrid"></div>
+      </section>
+      <section id="communityView" class="community-page" hidden aria-label="Phoenix Community">
+        <div class="community-hero community-banner">
+          <div class="community-hero-copy"><p class="eyebrow">PHOENIX <span class="banner-dot">◆</span> COMMUNITY <i></i></p><h2>Commun<span>ity</span></h2><p>Ask for help, share knowledge, and connect with fellow builders. <b>🔥</b></p>
+            <div class="community-hero-pills"><button type="button" data-community-action="ask"><span>❔</span> Ask Questions</button><button type="button" data-community-action="ideas"><span>💡</span> Share Ideas</button><button type="button" data-community-action="help"><span>♟</span> Get Help</button><button type="button" data-community-action="collaborate"><span>🤝</span> Collaborate</button><button type="button" data-community-action="grow"><span>🚀</span> Grow Together</button></div>
+          </div>
+          <div class="community-hero-art community-hero-image" aria-hidden="true"><img src="assets/community-phoenix.webp" alt="" loading="eager"></div>
+          <div class="community-banner-motto" aria-hidden="true">Together<br><em>We Build Better</em><i></i></div>
+        </div>
+        <div class="community-layout">
+          <form class="panel community-form" id="communityForm">
+            <div class="community-form-title"><span class="community-form-icon">✉</span><div><h3>Ask the community</h3><p class="muted">Stuck on something? Let's solve it together.</p></div></div>
+            <label class="community-field-label" for="communityTopic">Question title <span>*</span></label>
+            <input id="communityTopic" required maxlength="100" placeholder="Keep it short and clear...">
+            <label class="community-field-label" for="communityCategory">Category</label>
+            <select id="communityCategory"><option value="Community">Choose a category</option><option>Frontend</option><option>Backend</option><option>AI / ML</option><option>DevOps</option><option>Open Source</option><option>Career & Learning</option><option>Ideas</option></select>
+            <label class="community-field-label" for="communityBody">Description <span>*</span></label>
+            <textarea id="communityBody" rows="5" maxlength="2000" placeholder="Explain the problem, tech stack, and what you've tried..." required></textarea>
+            <div class="community-form-bottom"><label class="community-notify"><input id="communityNotify" type="checkbox" checked><span>Notify me about new replies</span></label><button class="button button-primary" type="submit">↗ Post question</button></div>
+            <p class="tiny-note">Prototype mode · posts are stored for this session only.</p>
+          </form>
+          <div class="community-discussions-panel"><div class="community-discussions-heading"><div><p class="eyebrow">FROM THE COMMUNITY</p><h3>Latest discussions</h3></div><label class="community-search"><span>⌕</span><input id="communitySearch" type="search" placeholder="Search discussions..." aria-label="Search discussions"></label></div>
+            <div class="community-feed-tabs"><button class="selected" type="button" data-community-sort="latest">✦ Latest</button><button type="button" data-community-sort="helpful">♧ Most helpful</button><button type="button" data-community-sort="hot">↗ Hot</button></div>
+            <div class="discussion-list" id="discussionList"></div>
+          </div>
+        </div>
+        <div class="community-more"><div><p class="eyebrow">GROW TOGETHER</p><h3>More ways to engage</h3></div><article><span>♧</span><strong>Collaborate on GitHub</strong><small>Contribute to projects and issues.</small></article><article><span>✦</span><strong>Earn recognition</strong><small>Celebrate helpful community members.</small></article><article><span>◷</span><strong>Community events</strong><small>Build, learn, and share together.</small></article><article><span>♧</span><strong>Find your people</strong><small>Connect with developers like you.</small></article></div>
+      </section>
+      <section id="mapView" class="map-dashboard" hidden aria-label="World Cemetery map">
+        <div class="interactive-map-toolbar">
+          <div><span class="map-live-dot"></span><strong>Interactive world map</strong><p>Explore the world with drag and zoom controls.</p></div>
+          <div class="map-legend"><span><i class="legend-dot"></i> Interactive map</span><span class="map-data-note">Ready</span></div>
+        </div>
+        <div class="map-explorer-layout">
+          <div class="map-image-stage" id="mapStage" aria-label="Interactive world map">
+            <div id="interactiveMap" role="application" aria-label="Interactive map of sample project locations"></div>
+          </div>
+          <aside class="country-project-panel" aria-label="Sample project counts by country">
+            <h3>Top Countries</h3>
+            <p class="country-panel-note">Sample project distribution</p>
+            <ol id="countryProjectList" class="country-project-list"></ol>
+            <p class="country-panel-footnote">Illustrative sample data — not live submissions.</p>
+            <div class="map-sidebar-divider"></div>
+            <section class="map-leaderboard" aria-label="Leaderboard">
+              <h3>Leaderboard</h3>
+              <p class="country-panel-note">Top contributors · demo data</p>
+              <ol class="leaderboard-list">
+                <li><span class="leaderboard-rank">01</span><span class="leaderboard-person"><strong>CodePhoenix</strong><small>Projects revived</small></span><strong class="leaderboard-score">128 pts</strong></li>
+                <li><span class="leaderboard-rank">02</span><span class="leaderboard-person"><strong>ByteBuilder</strong><small>Helpful reviews</small></span><strong class="leaderboard-score">96 pts</strong></li>
+                <li><span class="leaderboard-rank">03</span><span class="leaderboard-person"><strong>DevNova</strong><small>Community support</small></span><strong class="leaderboard-score">74 pts</strong></li>
+                <li><span class="leaderboard-rank">04</span><span class="leaderboard-person"><strong>StackSage</strong><small>Issues solved</small></span><strong class="leaderboard-score">61 pts</strong></li>
+              </ol>
+              <p class="country-panel-footnote">Illustrative leaderboard — not real user rankings.</p>
+            </section>
+          </aside>
+        </div>
+        <div class="map-footer-note" id="mapStatus" role="status">Explore the world map: drag to pan and scroll to zoom. No demo markers are shown.</div>
+      </section>
       <section id="projectDetailView" class="project-detail-view" hidden aria-label="Project tombstone details">
         <button class="detail-back" id="backToGraveyard" type="button">← Back to Graveyard</button>
         <div id="projectDetailContent"></div>
