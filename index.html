@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#080b13">
+  <meta name="description" content="Discover abandoned open-source projects, explore what they need, and build a practical plan to bring them back to life."><title>PHOENIX — Give Open Source a Second Life</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/lenis@1.3.27/dist/lenis.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <link rel="stylesheet" href="style.css?v=phoenix-brand-polish-20261024">
+  <link rel="stylesheet" href="revival-enhancements.css?v=phoenix-visible-home-20261024">
+</head>
+<body>
+  <main class="phoenix-app">
+    <section class="intro-sequence" id="intro" aria-label="PHOENIX cinematic intro">
+      <div class="intro-stage">
+        <canvas id="introCanvas" class="intro-canvas"></canvas>
+        <div class="intro-shade"></div>
+        <div class="intro-loader" id="introLoader">
+          <div class="phoenix-mark"><img src="assets/icons/phoenix.png" alt=""></div>
+          <p>PREPARING THE GATES</p>
+          <div class="loader-track"><span id="loaderBar"></span></div>
+          <small id="loaderText">0%</small>
+        </div>
+        <div class="frame-warning" id="frameWarning" hidden></div>
+        <button class="skip-intro" id="skipIntro">Skip intro ↗</button>
+      </div>
+    </section>
+    
