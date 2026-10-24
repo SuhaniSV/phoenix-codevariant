@@ -25,7 +25,7 @@ button { cursor: pointer; }
 button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
 [hidden] { display: none !important; }
 .phoenix-app { width: 100%; min-height: 100vh; overflow: clip; }
-.intro-sequence { position: relative; width: 100%; height: 300vh; background: #08090d; }
+.intro-sequence { position: relative; width: 100%; height: 450vh; background: #08090d; }
 .intro-stage { position: sticky; top: 0; width: 100%; height: 100vh; height: 100svh; overflow: hidden; background: #08090d; isolation: isolate; }
 .intro-canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
 .intro-shade { position: absolute; inset: 0; pointer-events: none; background: linear-gradient(180deg,rgba(2,5,12,.15),transparent 48%,rgba(2,5,12,.55)),radial-gradient(ellipse at center,transparent 35%,rgba(0,0,0,.35)); }
@@ -196,7 +196,7 @@ select, .modal input:not([type=checkbox]), .modal textarea, .community-form inpu
   .project-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
 }
 @media (max-width:700px) {
-  .intro-sequence { height: 250vh; }
+  .intro-sequence { height: 375vh; }
   .landing-hero { min-height: 100vh; padding: 12px 14px 18px; }
   .topbar { gap: 10px; padding: 10px; border-radius: 13px; }
   .brand { font-size: 24.84px; }
