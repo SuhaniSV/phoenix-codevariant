@@ -104,3 +104,29 @@
       </div>
       <div class="hero-footnote">Demo content is illustrative. Connect a backend to show live platform metrics.</div>
     </section>
+
+    
+    <section id="appContent" class="app-content" hidden>
+      <div class="content-heading">
+        <div class="graveyard-heading"><p class="eyebrow">PHOENIX · ABANDONED PROJECT</p><h2 id="pageTitle">Projects waiting for a second chance</h2><p class="muted" id="pageDescription">Find unfinished ideas worth saving and contributors ready to help.</p></div>
+        <div class="heading-actions">
+          <label class="graveyard-search"><span>⌕</span><input id="graveyardSearch" type="search" placeholder="Search projects..." aria-label="Search projects"></label>
+          <button class="graveyard-icon-button" type="button" aria-label="Notifications" title="Notifications">♧</button>
+          <button class="graveyard-icon-button" type="button" aria-label="Settings" title="Settings">⚙</button>
+          <button class="button button-primary small" id="toggleFilters" type="button" aria-expanded="false">Filters</button>
+          <button class="button button-secondary small" id="addProjectButton">＋ Add a project</button><button class="button button-primary small" id="importReposButton">Import from GitHub</button>
+        </div>
+      </div>
+      <div id="projectsView">
+        <div class="filter-row">
+          <div class="filter-tabs">
+            <button class="filter-tab selected" data-filter="Home">All projects</button>
+            <button class="filter-tab" data-filter="Graveyard">Graveyard</button>
+            <button class="filter-tab" data-filter="Under Revival">Under Revival</button>
+            <button class="filter-tab" data-filter="Memorial Garden">Memorial Garden</button>
+            <button class="filter-tab" data-filter="Hall of Fame">Hall of Fame</button>
+          </div>
+          <div class="graveyard-selects"><select id="languageFilter" aria-label="Filter by language"><option value="">All languages</option><option>Python</option><option>JavaScript</option><option>TypeScript</option><option>React</option><option>Java</option><option>C++</option></select><label class="graveyard-sort"><span class="sort-label">Sort</span><select id="graveyardSort" aria-label="Sort projects"><option value="popular">Most liked</option><option value="disliked">Most disliked</option><option value="name">Name A–Z</option><option value="recent">Recently active</option></select></label></div>
+        </div>
+        <div class="project-grid" id="projectGrid"></div>
+      </div>
