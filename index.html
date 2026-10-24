@@ -130,3 +130,27 @@
         </div>
         <div class="project-grid" id="projectGrid"></div>
       </div>
+      <section id="projectDetailView" class="project-detail-view" hidden aria-label="Project tombstone details">
+        <button class="detail-back" id="backToGraveyard" type="button">← Back to Graveyard</button>
+        <div id="projectDetailContent"></div>
+      </section>
+    </section>
+    <footer class="site-footer phoenix-credit-banner"><div class="footer-brand"><img src="assets/icons/phoenix.png" alt=""> PHOENIX</div><div class="phoenix-footer-message"><p>Every last commit deserves another chance.</p><span>Built for the people who believe unfinished ideas still matter.</span></div><div class="phoenix-footer-credit"><i></i> BY SUHANI AND SHUBHANG</div></footer>
+  </main>
+
+  <aside class="ai-assistant-panel" id="aiAssistantPanel" aria-labelledby="aiAssistantTitle" hidden>
+    <header class="ai-assistant-header">
+      <div class="ai-assistant-identity"><span class="ai-robot-avatar" aria-hidden="true">◉</span><span><strong id="aiAssistantTitle">PHOENIX AI</strong><small><i></i> Project assistant</small></span></div>
+      <button class="ai-assistant-close" id="aiAssistantClose" type="button" aria-label="Close AI assistant">×</button>
+    </header>
+    <div class="ai-chat-messages" id="aiChatMessages" aria-live="polite"></div>
+    <div class="ai-quick-prompts" aria-label="Suggested questions">
+      <button type="button" data-ai-prompt="Why was this project abandoned?">Why was this project abandoned?</button>
+      <button type="button" data-ai-prompt="What's left to complete?">What's left to complete?</button>
+      <button type="button" data-ai-prompt="Give me a revival plan">Give me a revival plan</button>
+    </div>
+    <form class="ai-chat-form" id="aiChatForm">
+      <input id="aiChatInput" autocomplete="off" maxlength="220" placeholder="Ask anything about this project..." aria-label="Ask Phoenix AI">
+      <button type="submit" aria-label="Send message">➜</button>
+    </form>
+  </aside>
