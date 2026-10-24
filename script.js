@@ -326,3 +326,4 @@
       if (lenis) lenis.stop();
       window.scrollTo({ top: 0, behavior: "instant" });
     }
+  
