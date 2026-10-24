@@ -34,24 +34,21 @@ function drawFrame(index) {
       scheduleDraw();
     }
 
-    // In the final moment, fade in the complete landing page and navbar as
-    // one composition. Keep it there until the real landing section reaches
-    // the viewport; don't reveal a lone PHOENIX title.
+    
     const reachedLanding = window.scrollY >= intro.offsetTop + intro.offsetHeight - 1;
     const previewLanding = !reachedLanding && targetProgress >= 0.99;
     document.body.classList.toggle("landing-preview", previewLanding);
     document.body.classList.toggle("landing-revealed", reachedLanding);
   }
 
-  // Lenis smooths the page's native scrolling. Its scroll event also drives
-  // the canvas sequence so frame changes stay synced with the smoothed scroll.
+ 
   if (typeof window.Lenis === "function") {
     lenis = new window.Lenis({
       autoRaf: true,
       anchors: true,
       allowNestedScroll: true,
       stopInertiaOnNavigate: true,
-      // Keep wheel input responsive without making the cinematic scrub feel jumpy.
+     
       lerp: 0.11,
       wheelMultiplier: 1,
       touchMultiplier: 1
@@ -70,9 +67,7 @@ function drawFrame(index) {
     }
   }
   function skipIntroSequence() {
-    // Skip moves to Home without removing the cinematic section. This keeps
-    // the frame-by-frame animation available whenever the visitor scrolls
-    // back to the top or reloads the site.
+   
     loader.hidden = true;
     document.documentElement.classList.remove("intro-loading-lock");
     if (lenis) lenis.start();
@@ -92,8 +87,7 @@ function drawFrame(index) {
               settleFirstFrameReady(true);
               frameWarning.hidden = true;
             }
-            // A frame may finish loading after the scroll has already reached it.
-            // Redraw on completion so the canvas never stays black or frozen there.
+           
             if (index === currentFrame) {
               lastDrawn = -1;
               scheduleDraw();
@@ -110,7 +104,7 @@ function drawFrame(index) {
           failed++;
           console.warn("Could not load frame:", FRAME_PATH(index));
         } else {
-          // Decode before the user can scrub to this frame, avoiding decode stutters.
+          
           try { await image.decode(); } catch (_) { /* Some browsers decode on draw. */ }
           if (index === currentFrame) {
             lastDrawn = -1;
@@ -131,9 +125,7 @@ function drawFrame(index) {
   }
 
   async function startFrameLoading() {
-    // Start all frame workers immediately, but don't wait for ~20 MB of assets.
-    // The intro becomes usable as soon as frame 1 is available; the rest load
-    // in the background and redraw themselves if the visitor has scrubbed ahead.
+    
     const workerCount = Math.min(6, FRAME_COUNT);
     const loading = Promise.all(Array.from({ length: workerCount }, () => loadWorker()));
     loading.catch((error) => console.warn("Intro frame loading stopped:", error));
@@ -149,7 +141,7 @@ function drawFrame(index) {
     loader.hidden = true;
     document.documentElement.classList.remove("intro-loading-lock");
     skipIntro.disabled = false;
-    if (lenis) lenis.start();
+    if (lenis) lenis.start()
     lastDrawn = -1;
     drawFrame(currentFrame);
     updateScroll();
