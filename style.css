@@ -1,0 +1,30 @@
+  -webkit-background-clip: border-box;
+  background-clip: border-box;
+  -webkit-text-fill-color: currentColor;
+}
+#landing .hero-copy .eyebrow {
+  color: inherit;
+  letter-spacing: revert;
+}
+#landing .hero-description {
+  font-size: revert;
+  line-height: revert;
+}
+#landing .hero-actions {
+  margin-top: revert;
+}
+#landing .metrics-bar {
+  margin-top: revert;
+  padding: revert;
+}
+#landing .metric {
+  min-height: revert;
+  padding: revert;
+  border: revert;
+  border-radius: revert;
+  background: revert;
+  box-shadow: revert;
+}
+#landing .metric strong {
+  color: inherit;
+}
