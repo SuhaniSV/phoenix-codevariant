@@ -13,8 +13,7 @@
 .skip-intro { position: absolute; z-index: 8; right: 24px; top: 24px; padding: 10px 14px; border: 1px solid #ffffff50; border-radius: 999px; background: #09090b80; color: #fff; backdrop-filter: blur(10px); }
 .eyebrow { margin: 0 0 14px; color: #d6c7b1; font-size: 10px; font-weight: 700; letter-spacing: .32em; }
 .landing-hero { position: relative; width: 100%; min-height: 100vh; padding: 24px clamp(18px,4vw,64px) 26px; background-color: #080b13; background-image: linear-gradient(90deg,rgba(3,8,18,.7) 0%,rgba(3,8,18,.48) 44%,rgba(3,8,18,.2) 100%),linear-gradient(180deg,rgba(3,8,18,.14) 0%,transparent 38%,rgba(3,8,18,.42) 100%),url("assets/hero-wallpaper.webp"); background-position: center,center,center; background-size: cover,cover,cover; background-repeat: no-repeat; }
-/* Keep the landing page hidden until the cinematic sequence has finished.
-   The whole page reveals together, while the navbar, hero, and metrics stagger softly. */
+
 .landing-hero, .app-content, .site-footer { opacity: 0; transform: translateY(18px); pointer-events: none; transition: opacity 1.35s cubic-bezier(.2,.65,.25,1), transform 1.35s cubic-bezier(.2,.65,.25,1); }
 body.landing-revealed .landing-hero, body.landing-revealed .app-content, body.landing-revealed .site-footer { opacity: 1; transform: translateY(0); pointer-events: auto; }
 body.landing-preview .landing-hero { position: fixed; inset: 0; z-index: 40; width: 100%; height: 100vh; height: 100svh; min-height: 100vh; overflow: hidden; opacity: 1; transform: none; pointer-events: auto; transition: opacity .75s ease; }
@@ -29,8 +28,7 @@ body.landing-preview .metrics-bar { transition-delay: .2s; }
 body.landing-revealed .topbar { transition-delay: .12s; }
 body.landing-revealed .hero-content { transition-delay: .34s; }
 .landing-hero { position: relative; width: 100%; min-height: 100vh; padding: 24px clamp(18px,4vw,64px) 26px; background-color: #080b13; background-image: linear-gradient(90deg,rgba(3,8,18,.7) 0%,rgba(3,8,18,.48) 44%,rgba(3,8,18,.2) 100%),linear-gradient(180deg,rgba(3,8,18,.14) 0%,transparent 38%,rgba(3,8,18,.42) 100%),url("assets/hero-wallpaper.webp"); background-position: center,center,center; background-size: cover,cover,cover; background-repeat: no-repeat; }
-/* Keep the landing page hidden until the cinematic sequence has finished.
-   The whole page reveals together, while the navbar, hero, and metrics stagger softly. */
+
 .landing-hero, .app-content, .site-footer { opacity: 0; transform: translateY(18px); pointer-events: none; transition: opacity 1.35s cubic-bezier(.2,.65,.25,1), transform 1.35s cubic-bezier(.2,.65,.25,1); }
 body.landing-revealed .landing-hero, body.landing-revealed .app-content, body.landing-revealed .site-footer { opacity: 1; transform: translateY(0); pointer-events: auto; }
 body.landing-preview .landing-hero { position: fixed; inset: 0; z-index: 40; width: 100%; height: 100vh; height: 100svh; min-height: 100vh; overflow: hidden; opacity: 1; transform: none; pointer-events: auto; transition: opacity .75s ease; }
