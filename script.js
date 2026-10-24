@@ -11,7 +11,8 @@
   const loaderText = document.getElementById("loaderText");
   const frameWarning = document.getElementById("frameWarning");
   const skipIntro = document.getElementById("skipIntro");
-  
+  // Start every visit at the first cinematic frame. Prevent the browser from
+  // restoring a previous scroll position and accidentally scrubbing the intro.
   if ("scrollRestoration" in window.history) window.history.scrollRestoration = "manual";
   window.scrollTo({ top: 0, left: 0, behavior: "auto" });
   document.documentElement.classList.add("intro-loading-lock");
@@ -165,22 +166,24 @@
       scheduleDraw();
     }
 
-  
-   
+    // In the final moment, fade in the complete landing page and navbar as
+    // one composition. Keep it there until the real landing section reaches
+    // the viewport; don't reveal a lone PHOENIX title.
     const reachedLanding = window.scrollY >= intro.offsetTop + intro.offsetHeight - 1;
     const previewLanding = !reachedLanding && targetProgress >= 0.99;
     document.body.classList.toggle("landing-preview", previewLanding);
     document.body.classList.toggle("landing-revealed", reachedLanding);
   }
 
-  
+  // Lenis smooths the page's native scrolling. Its scroll event also drives
+  // the canvas sequence so frame changes stay synced with the smoothed scroll.
   if (typeof window.Lenis === "function") {
     lenis = new window.Lenis({
       autoRaf: true,
       anchors: true,
       allowNestedScroll: true,
       stopInertiaOnNavigate: true,
-      
+      // Keep wheel input responsive without making the cinematic scrub feel jumpy.
       lerp: 0.11,
       wheelMultiplier: 1,
       touchMultiplier: 1
@@ -199,7 +202,9 @@
     }
   }
   function skipIntroSequence() {
-    
+    // Skip moves to Home without removing the cinematic section. This keeps
+    // the frame-by-frame animation available whenever the visitor scrolls
+    // back to the top or reloads the site.
     loader.hidden = true;
     document.documentElement.classList.remove("intro-loading-lock");
     if (lenis) lenis.start();
@@ -219,7 +224,8 @@
               settleFirstFrameReady(true);
               frameWarning.hidden = true;
             }
-            
+            // A frame may finish loading after the scroll has already reached it.
+            // Redraw on completion so the canvas never stays black or frozen there.
             if (index === currentFrame) {
               lastDrawn = -1;
               scheduleDraw();
@@ -236,7 +242,7 @@
           failed++;
           console.warn("Could not load frame:", FRAME_PATH(index));
         } else {
-          
+          // Decode before the user can scrub to this frame, avoiding decode stutters.
           try { await image.decode(); } catch (_) { /* Some browsers decode on draw. */ }
           if (index === currentFrame) {
             lastDrawn = -1;
@@ -318,6 +324,8 @@
     activePage = page;
     const isHome = page === "Home";
     if (!isHome) {
+      // Landing-only action-zone filtering must not leak into app pages.
+      document.body.classList.remove("landing-preview", "landing-revealed");
       const aiPanel = document.getElementById("aiAssistantPanel");
       if (aiPanel && !aiPanel.hidden) {
         aiPanel.hidden = true;
@@ -328,8 +336,8 @@
     if (["Home", "Graveyard", "Memorial Garden", "Hall of Fame"].includes(page)) currentFilter = page;
     if (isTombstone) currentFilter = "Graveyard";
     document.body.classList.toggle("page-view-open", !isHome);
-   
-
+    // Clicking Home from a dashboard should show the actual landing page,
+    // not return to the dark cinematic intro or leave the hero hidden.
     document.body.classList.toggle("home-direct", isHome);
     if (isHome) {
       document.body.classList.add("landing-revealed");
@@ -562,7 +570,8 @@
         return;
       }
       if (payload.type === "revival-plan" && project) {
-        
+        // Opening a plan is not itself a revival; only dropping the project card
+        // into Revive moves it from Graveyard to Memorial Garden.
         canvasDispatch(action, payload);
         canvasFeedback(`Revival plan opened for ${project.name}.`);
         return;
@@ -628,7 +637,12 @@
       projects.push(created); persistProjectStatuses(); closeModal(); currentFilter = "Graveyard"; setPage("Graveyard");
       canvasFeedback(`${name} added to your local demo Graveyard. Connect Supabase for shared review submissions.`); return;
     }
+    if (action === "explore") {
+      if (payload.type !== "explore-projects") { canvasFeedback("Drag the Explore Projects card to this zone.", true); return; }
+      currentFilter = "Graveyard"; setPage("Graveyard"); canvasFeedback("Explore the Graveyard: choose a project tile to open its details."); return;
+    }
     if (action === "connect") {
+      if (payload.type === "landing-github") { openGithubModal(); canvasFeedback("GitHub action opened. Drag its action card to Connect to continue."); return; }
       if (payload.type === "github-connect") { setGithubConnection(true); closeModal(); openRepoPicker(); canvasFeedback("Demo GitHub connected. Choose repositories and drag the import card to Import."); return; }
       if (payload.type === "github-disconnect") { setGithubConnection(false); closeModal(); openProfileOverview(); canvasFeedback("Demo GitHub disconnected."); return; }
       canvasFeedback("Drag a GitHub connect or disconnect card here.", true); return;
@@ -692,7 +706,6 @@
           <div class="project-meta"><span>◷ ${escapeHTML(project.lastCommit)}</span><span>★ ${project.stars}</span></div>
           <div class="tag-row">${project.needs.slice(0,2).map((n) => `<span class="tag">${escapeHTML(n)}</span>`).join("")}</div>
           ${currentFilter === "Graveyard" ? `<div class="vote-actions canvas-vote-hint" aria-label="Canvas actions"><span>♥ ${getProjectVotes(project.id).likes}</span><span>⌁ ${getProjectVotes(project.id).dislikes}</span><small>Drag this project card to Support or Needs Work</small><button class="card-action" type="button">View tombstone <span>↗</span></button></div>` : `<button class="card-action" type="button">View tombstone <span>↗</span></button>`}
-          <a class="start-working-button" href="${escapeHTML(githubWorkUrl(project))}" target="_blank" rel="noopener noreferrer">Start Working <span aria-hidden="true">↗</span></a>
         </div>`;
       card.draggable = true;
       card.dataset.dragType = "project";
@@ -755,7 +768,7 @@
       card.setAttribute("aria-label", `Open ${project.name}`);
       card.innerHTML = `
         <div class="memorial-art"><img src="assets/memorial-garden/${escapeHTML(project.gardenArt || "taskflow")}.webp" alt="${escapeHTML(project.name)} revived project garden"></div>
-        <div class="memorial-card-copy"><h3>${escapeHTML(project.name)}</h3><p>${escapeHTML(project.revived || "Recently revived")}</p><span>${escapeHTML(project.gardenTech || project.language)}</span><a class="start-working-button" href="${escapeHTML(githubWorkUrl(project))}" target="_blank" rel="noopener noreferrer">Start Working <span aria-hidden="true">↗</span></a></div>`;
+        <div class="memorial-card-copy"><h3>${escapeHTML(project.name)}</h3><p>${escapeHTML(project.revived || "Recently revived")}</p><span>${escapeHTML(project.gardenTech || project.language)}</span></div>`;
       card.querySelectorAll(".start-working-button").forEach((link) => {
         link.addEventListener("click", (event) => event.stopPropagation());
         link.addEventListener("keydown", (event) => event.stopPropagation());
@@ -798,7 +811,7 @@
       card.setAttribute("aria-label", `Open ${project.name}`);
       card.innerHTML = `
         <div class="hall-art hall-art-${escapeHTML(project.hallArt || "mediscan")}" aria-hidden="true"><span class="hall-art-glow"></span><span class="hall-art-title">${escapeHTML(project.language)}</span></div>
-        <div class="hall-card-copy"><h3>${escapeHTML(project.name)}</h3><p>${escapeHTML(project.hallLaunch || "Recently launched")}</p><div class="hall-stats"><span>★ ${project.stars}</span><span>✦ ${project.hallSignals || 0}</span></div><a class="start-working-button" href="${escapeHTML(githubWorkUrl(project))}" target="_blank" rel="noopener noreferrer">Start Working <span aria-hidden="true">↗</span></a></div>`;
+        <div class="hall-card-copy"><h3>${escapeHTML(project.name)}</h3><p>${escapeHTML(project.hallLaunch || "Recently launched")}</p><div class="hall-stats"><span>★ ${project.stars}</span><span>✦ ${project.hallSignals || 0}</span></div></div>`;
       card.querySelectorAll(".start-working-button").forEach((link) => {
         link.addEventListener("click", (event) => event.stopPropagation());
         link.addEventListener("keydown", (event) => event.stopPropagation());
@@ -820,7 +833,8 @@
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
         maxZoom: 19
       }).addTo(phoenixLeafletMap);
-      
+      // Illustrative sample locations/counts only, not live submissions.
+      // India has multiple city dots; their sample counts add up to the India total.
       const countryTotals = [
         { country: "India", flag: "🇮🇳", count: 342 },
         { country: "USA", flag: "🇺🇸", count: 281 },
@@ -1084,8 +1098,10 @@
   }
   function statusClass(status) { return status.toLowerCase().replaceAll(" ", "-"); }
 
-  
-  
+  // Older shared links used #landing, which makes the browser jump past the
+  // cinematic section before the animation has a chance to play. Treat that
+  // anchor as the beginning of Home so the 116-frame scroll intro always
+  // starts from frame one.
   if (window.location.hash === "#landing") {
     window.history.replaceState(null, "", `${window.location.pathname}${window.location.search}`);
     window.scrollTo({ top: 0, left: 0, behavior: "auto" });
@@ -1113,7 +1129,6 @@
     document.getElementById("toggleFilters").setAttribute("aria-expanded", open);
   });
   document.getElementById("languageFilter").addEventListener("change", renderProjects);
-  document.getElementById("connectGithub").addEventListener("click", openGithubModal);
   const profileButton = document.getElementById("profileButton");
   const profileButtonAvatar = document.getElementById("profileButtonAvatar");
   const profileDropdown = document.getElementById("profileDropdown");
@@ -1304,10 +1319,12 @@
   document.getElementById("importReposButton").addEventListener("click", connected ? openRepoPicker : openGithubModal);
   document.getElementById("addProjectButton").addEventListener("click", openAddProject);
   skipIntro.addEventListener("click", skipIntroSequence);
- 
+  // Do not auto-skip the intro on a timer: the sequence is scroll-driven and
+  // should remain on its opening frame until the visitor scrolls or skips it.
+  // startFrameLoading() releases the loading lock after frame 1 loads (or its
+  // timeout expires), and the visible Skip Intro button remains available.
 
   document.getElementById("brandHome").addEventListener("click", (event) => { event.preventDefault(); currentFilter = "Home"; setPage("Home"); });
-  document.getElementById("exploreProjects")?.addEventListener("click", () => setPage("Graveyard"));
   document.getElementById("backToGraveyard").addEventListener("click", () => setPage("Graveyard"));
   document.getElementById("modalClose").addEventListener("click", closeModal);
   document.getElementById("modalBackdrop").addEventListener("mousedown", (event) => { if (event.target.id === "modalBackdrop") closeModal(); });
@@ -1324,7 +1341,10 @@
   }));
   const communitySearch = document.getElementById("communitySearch");
   if (communitySearch) communitySearch.addEventListener("input", renderCommunity);
- 
+  // Landing reveal is handled in updateScroll() once the intro has fully left view.
+
+  // Lenis already reports scroll updates above; attach the native listener only
+  // when its CDN is unavailable so we do not schedule duplicate canvas redraws.
   if (!lenis) window.addEventListener("scroll", updateScroll, { passive: true });
   window.addEventListener("resize", () => { lastDrawn = -1; scheduleDraw(); updateScroll(); if (phoenixLeafletMap) phoenixLeafletMap.invalidateSize(); });
   renderProjects(); renderCommunity(); renderMapPins(); updateScroll(); startFrameLoading();

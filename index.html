@@ -13,7 +13,7 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
   <link rel="stylesheet" href="style.css?v=phoenix-brand-polish-20261024">
   <link rel="stylesheet" href="revival-enhancements.css?v=phoenix-visible-home-20261024">
-  <link rel="stylesheet" href="canvas-protocol.css?v=variant-factor-unlocked-20261024">
+  <link rel="stylesheet" href="canvas-protocol.css?v=variant-factor-unlocked-20261024-v3">
 </head>
 <body>
   <main class="phoenix-app">
@@ -94,9 +94,13 @@
           <p class="eyebrow">GIVE GREAT IDEAS A SECOND LIFE</p>
           <h2>Dead Projects<br>Deserve a <span>Second Life.</span></h2>
           <p class="hero-description">Discover forgotten open-source gems, understand what they need, and build a practical plan to bring them back with a community of contributors.</p>
-          <div class="hero-actions">
-            <button class="button button-primary" id="exploreProjects" type="button">Explore Projects <span aria-hidden="true">↗</span></button>
-            <button class="button button-secondary" id="connectGithub" type="button">◉ Connect with GitHub</button>
+          <div class="hero-actions canvas-hero-actions" aria-label="Drag an action card to its matching zone">
+            <article class="hero-action-card" data-drag-type="explore-projects" draggable="true" tabindex="0" aria-label="Explore Projects. Drag to Explore zone">
+              <span class="hero-action-icon" aria-hidden="true">↗</span><span><strong>Explore Projects</strong><small>Drag to Explore</small></span><span class="hero-drag-grip" aria-hidden="true">⠿</span>
+            </article>
+            <article class="hero-action-card hero-action-card-secondary" data-drag-type="landing-github" draggable="true" tabindex="0" aria-label="Connect with GitHub. Drag to Connect zone">
+              <span class="hero-action-icon" aria-hidden="true">◉</span><span><strong>Connect with GitHub</strong><small>Drag to Connect</small></span><span class="hero-drag-grip" aria-hidden="true">⠿</span>
+            </article>
           </div>
         </div>
         
@@ -230,23 +234,78 @@
   </main>
 
 
-    <aside class="canvas-protocol" id="canvasProtocol" aria-label="The Canvas Protocol action zones">
+  <aside class="canvas-protocol" id="canvasProtocol" aria-label="The Canvas Protocol action zones">
     <div class="canvas-protocol-heading">
-      <div class="canvas-protocol-brand"><span class="canvas-protocol-mark">✦</span><div><strong>THE CANVAS PROTOCOL</strong><small>Drag a data card into a zone to perform its action</small></div></div>
+      <div class="canvas-protocol-brand">
+        <span class="canvas-protocol-mark">✦</span>
+        <div>
+          <strong>THE CANVAS PROTOCOL</strong>
+          <small>Drag a data card into a zone to perform its action</small>
+        </div>
+      </div>
       <p id="canvasStatus" class="canvas-status" role="status" aria-live="polite">Ready · Select a project or prepare a draft card.</p>
     </div>
     <div class="canvas-zones" id="canvasZones">
-      <div class="canvas-zone" data-drop-action="revive" role="region" aria-label="Drop here to revive a project or open its revival plan"><span class="canvas-zone-icon">✦</span><strong>Revive</strong><small>Project / plan</small></div>
-      <div class="canvas-zone" data-drop-action="support" role="region" aria-label="Drop here to support a project"><span class="canvas-zone-icon">♥</span><strong>Support</strong><small>Like a project</small></div>
-      <div class="canvas-zone" data-drop-action="needs-work" role="region" aria-label="Drop here to mark a project as needing work"><span class="canvas-zone-icon">⌁</span><strong>Needs Work</strong><small>Flag for help</small></div>
-      <div class="canvas-zone" data-drop-action="flower" role="region" aria-label="Drop here to leave a flower tribute"><span class="canvas-zone-icon">✿</span><strong>Leave Flower</strong><small>Tribute card</small></div>
-      <div class="canvas-zone" data-drop-action="save" role="region" aria-label="Drop here to save a project or apply changes"><span class="canvas-zone-icon">◇</span><strong>Save</strong><small>Changes / project</small></div>
-      <div class="canvas-zone" data-drop-action="publish" role="region" aria-label="Drop here to publish a community question or discussion"><span class="canvas-zone-icon">↗</span><strong>Publish</strong><small>Community post</small></div>
-      <div class="canvas-zone" data-drop-action="add-project" role="region" aria-label="Drop here to submit a project"><span class="canvas-zone-icon">＋</span><strong>Add Project</strong><small>Project submission</small></div>
-      <div class="canvas-zone" data-drop-action="connect" role="region" aria-label="Drop here to connect or disconnect demo GitHub"><span class="canvas-zone-icon">◉</span><strong>Connect</strong><small>GitHub</small></div>
-      <div class="canvas-zone" data-drop-action="import" role="region" aria-label="Drop here to import selected demo repositories"><span class="canvas-zone-icon">⇩</span><strong>Import</strong><small>Repo cards</small></div>
-      <div class="canvas-zone" data-drop-action="complete-task" role="region" aria-label="Drop here to complete a revival task"><span class="canvas-zone-icon">✓</span><strong>Complete Task</strong><small>Revival work</small></div>
-      <div class="canvas-zone" data-drop-action="send-message" role="region" aria-label="Drop here to send a Phoenix AI message"><span class="canvas-zone-icon">➤</span><strong>Send Message</strong><small>Phoenix AI</small></div>
+      <div class="canvas-zone canvas-zone-explore" data-drop-action="explore" role="region" aria-label="Drop here to explore projects">
+        <span class="canvas-zone-icon">↗</span>
+        <strong>Explore</strong>
+        <small>Open Graveyard</small>
+      </div>
+      <div class="canvas-zone" data-drop-action="revive" role="region" aria-label="Drop here to revive a project or open its revival plan">
+        <span class="canvas-zone-icon">✦</span>
+        <strong>Revive</strong>
+        <small>Project / plan</small>
+      </div>
+      <div class="canvas-zone" data-drop-action="support" role="region" aria-label="Drop here to support a project">
+        <span class="canvas-zone-icon">♥</span>
+        <strong>Support</strong>
+        <small>Like a project</small>
+      </div>
+      <div class="canvas-zone" data-drop-action="needs-work" role="region" aria-label="Drop here to mark a project as needing work">
+        <span class="canvas-zone-icon">⌁</span>
+        <strong>Needs Work</strong>
+        <small>Flag for help</small>
+      </div>
+      <div class="canvas-zone" data-drop-action="flower" role="region" aria-label="Drop here to leave a flower tribute">
+        <span class="canvas-zone-icon">✿</span>
+        <strong>Leave Flower</strong>
+        <small>Tribute card</small>
+      </div>
+      <div class="canvas-zone" data-drop-action="save" role="region" aria-label="Drop here to save a project or apply changes">
+        <span class="canvas-zone-icon">◇</span>
+        <strong>Save</strong>
+        <small>Changes / project</small>
+      </div>
+      <div class="canvas-zone" data-drop-action="publish" role="region" aria-label="Drop here to publish a community question or discussion">
+        <span class="canvas-zone-icon">↗</span>
+        <strong>Publish</strong>
+        <small>Community post</small>
+      </div>
+      <div class="canvas-zone" data-drop-action="add-project" role="region" aria-label="Drop here to submit a project">
+        <span class="canvas-zone-icon">＋</span>
+        <strong>Add Project</strong>
+        <small>Project submission</small>
+      </div>
+      <div class="canvas-zone canvas-zone-connect" data-drop-action="connect" role="region" aria-label="Drop here to connect or disconnect demo GitHub">
+        <span class="canvas-zone-icon">◉</span>
+        <strong>Connect</strong>
+        <small>GitHub</small>
+      </div>
+      <div class="canvas-zone" data-drop-action="import" role="region" aria-label="Drop here to import selected demo repositories">
+        <span class="canvas-zone-icon">⇩</span>
+        <strong>Import</strong>
+        <small>Repo cards</small>
+      </div>
+      <div class="canvas-zone" data-drop-action="complete-task" role="region" aria-label="Drop here to complete a revival task">
+        <span class="canvas-zone-icon">✓</span>
+        <strong>Complete Task</strong>
+        <small>Revival work</small>
+      </div>
+      <div class="canvas-zone" data-drop-action="send-message" role="region" aria-label="Drop here to send a Phoenix AI message">
+        <span class="canvas-zone-icon">➤</span>
+        <strong>Send Message</strong>
+        <small>Phoenix AI</small>
+      </div>
     </div>
   </aside>
 

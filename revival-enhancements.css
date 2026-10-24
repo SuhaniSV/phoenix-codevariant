@@ -3,6 +3,7 @@
 
 
 
+/* PHOENIX landing page: remove the added banner and oversized gradient headline */
 #landing.landing-hero::before {
   content: none !important;
   display: none !important;
@@ -55,12 +56,8 @@
 }
 @media (max-width: 640px) {
   #landing.landing-hero { padding-top: 0; }
-
   #landing.landing-hero::before { display: none !important; }
-  
   #landing .hero-copy h2 { font-size: revert; }
-  
   #landing .metrics-bar { margin-top: revert; padding: revert; }
- 
   #landing .metric { min-height: revert; padding: revert; }
 }
