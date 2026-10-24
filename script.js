@@ -117,24 +117,21 @@
       scheduleDraw();
     }
 
-    // In the final moment, fade in the complete landing page and navbar as
-    // one composition. Keep it there until the real landing section reaches
-    // the viewport; don't reveal a lone PHOENIX title.
+  
     const reachedLanding = window.scrollY >= intro.offsetTop + intro.offsetHeight - 1;
     const previewLanding = !reachedLanding && targetProgress >= 0.99;
     document.body.classList.toggle("landing-preview", previewLanding);
     document.body.classList.toggle("landing-revealed", reachedLanding);
   }
 
-  // Lenis smooths the page's native scrolling. Its scroll event also drives
-  // the canvas sequence so frame changes stay synced with the smoothed scroll.
+  
   if (typeof window.Lenis === "function") {
     lenis = new window.Lenis({
       autoRaf: true,
       anchors: true,
       allowNestedScroll: true,
       stopInertiaOnNavigate: true,
-      // Keep wheel input responsive without making the cinematic scrub feel jumpy.
+      
       lerp: 0.11,
       wheelMultiplier: 1,
       touchMultiplier: 1
@@ -153,9 +150,7 @@
     }
   }
   function skipIntroSequence() {
-    // Skip moves to Home without removing the cinematic section. This keeps
-    // the frame-by-frame animation available whenever the visitor scrolls
-    // back to the top or reloads the site.
+    
     loader.hidden = true;
     document.documentElement.classList.remove("intro-loading-lock");
     if (lenis) lenis.start();
@@ -175,8 +170,7 @@
               settleFirstFrameReady(true);
               frameWarning.hidden = true;
             }
-            // A frame may finish loading after the scroll has already reached it.
-            // Redraw on completion so the canvas never stays black or frozen there.
+            
             if (index === currentFrame) {
               lastDrawn = -1;
               scheduleDraw();
@@ -193,8 +187,8 @@
           failed++;
           console.warn("Could not load frame:", FRAME_PATH(index));
         } else {
-          // Decode before the user can scrub to this frame, avoiding decode stutters.
-          try { await image.decode(); } catch (_) { /* Some browsers decode on draw. */ }
+          
+          try { await image.decode(); } catch (_) {  }
           if (index === currentFrame) {
             lastDrawn = -1;
             scheduleDraw();
@@ -214,9 +208,7 @@
   }
 
   async function startFrameLoading() {
-    // Start all frame workers immediately, but don't wait for ~20 MB of assets.
-    // The intro becomes usable as soon as frame 1 is available; the rest load
-    // in the background and redraw themselves if the visitor has scrubbed ahead.
+   
     const workerCount = Math.min(6, FRAME_COUNT);
     const loading = Promise.all(Array.from({ length: workerCount }, () => loadWorker()));
     loading.catch((error) => console.warn("Intro frame loading stopped:", error));
@@ -285,8 +277,7 @@
     if (["Home", "Graveyard", "Under Revival", "Memorial Garden", "Hall of Fame"].includes(page)) currentFilter = page;
     if (isTombstone) currentFilter = "Graveyard";
     document.body.classList.toggle("page-view-open", !isHome);
-    // Clicking Home from a dashboard should show the actual landing page,
-    // not return to the dark cinematic intro or leave the hero hidden.
+    
     document.body.classList.toggle("home-direct", isHome);
     if (isHome) {
       document.body.classList.add("landing-revealed");
@@ -488,4 +479,60 @@
       });
       grid.appendChild(card);
     });
+  }
+  function renderMapPins() {
+    const holder = document.getElementById("interactiveMap");
+    if (!holder || !window.L) return;
+    if (!phoenixLeafletMap) {
+      phoenixLeafletMap = L.map(holder, { worldCopyJump: true, minZoom: 2, maxZoom: 8 }).setView([20, 10], 2);
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+        maxZoom: 19
+      }).addTo(phoenixLeafletMap);
+  
+      const countryTotals = [
+        { country: "India", flag: "🇮🇳", count: 342 },
+        { country: "USA", flag: "🇺🇸", count: 281 },
+        { country: "Germany", flag: "🇩🇪", count: 154 },
+        { country: "UK", flag: "🇬🇧", count: 87 },
+        { country: "Croatia", flag: "🇭🇷", count: 64 }
+      ];
+      const sampleProjects = [
+        { country: "India", flag: "🇮🇳", count: 72, city: "Bengaluru", coords: [12.9716, 77.5946] },
+        { country: "India", flag: "🇮🇳", count: 64, city: "Mumbai", coords: [19.076, 72.8777] },
+        { country: "India", flag: "🇮🇳", count: 58, city: "New Delhi", coords: [28.6139, 77.209] },
+        { country: "India", flag: "🇮🇳", count: 43, city: "Hyderabad", coords: [17.385, 78.4867] },
+        { country: "India", flag: "🇮🇳", count: 38, city: "Chennai", coords: [13.0827, 80.2707] },
+        { country: "India", flag: "🇮🇳", count: 31, city: "Pune", coords: [18.5204, 73.8567] },
+        { country: "India", flag: "🇮🇳", count: 20, city: "Kolkata", coords: [22.5726, 88.3639] },
+        { country: "India", flag: "🇮🇳", count: 16, city: "Jaipur", coords: [26.9124, 75.7873] },
+        { country: "USA", flag: "🇺🇸", count: 281, city: "San Francisco", coords: [37.7749, -122.4194] },
+        { country: "Germany", flag: "🇩🇪", count: 154, city: "Berlin", coords: [52.52, 13.405] },
+        { country: "UK", flag: "🇬🇧", count: 87, city: "London", coords: [51.5072, -0.1276] },
+        { country: "Croatia", flag: "🇭🇷", count: 64, city: "Zagreb", coords: [45.815, 15.9819] },
+        { country: "Brazil", flag: "🇧🇷", count: 52, city: "São Paulo", coords: [-23.5505, -46.6333] },
+        { country: "Japan", flag: "🇯🇵", count: 46, city: "Tokyo", coords: [35.6762, 139.6503] },
+        { country: "Kenya", flag: "🇰🇪", count: 28, city: "Nairobi", coords: [-1.2921, 36.8219] }
+      ];
+      const list = document.getElementById("countryProjectList");
+      if (list) list.innerHTML = countryTotals.map((p) =>
+        '<li><span class="country-name"><span class="country-flag">' + p.flag + '</span>' + p.country + '</span><strong>' + p.count + '</strong></li>'
+      ).join("");
+      sampleProjects.forEach((project) => {
+        const dot = L.circleMarker(project.coords, {
+          radius: 6, color: "#caa2ff", weight: 1.5, fillColor: "#b45cff", fillOpacity: 0.95,
+          bubblingMouseEvents: false
+        }).addTo(phoenixLeafletMap);
+        dot.bindTooltip('<strong>' + project.country + ' · ' + project.count + ' sample projects</strong><br>' + project.city, {
+          direction: "top", offset: [0, -7], opacity: 1, className: "project-dot-tooltip"
+        });
+        dot.on("mouseover", () => dot.setStyle({ radius: 9, color: "#fff0ff", fillColor: "#e4baff", weight: 2 }));
+        dot.on("mouseout", () => dot.setStyle({ radius: 6, color: "#caa2ff", fillColor: "#b45cff", weight: 1.5 }));
+      });
+      const note = document.querySelector(".map-data-note");
+      if (note) note.textContent = "Sample locations";
+      const status = document.getElementById("mapStatus");
+      if (status) status.textContent = "Hover over glowing dots to see sample project counts by location. Country totals are illustrative sample data, not live submissions.";
+    }
+    requestAnimationFrame(() => phoenixLeafletMap.invalidateSize());
   }
