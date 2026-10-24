@@ -11,6 +11,8 @@
   const loaderText = document.getElementById("loaderText");
   const frameWarning = document.getElementById("frameWarning");
   const skipIntro = document.getElementById("skipIntro");
+  // The cinematic sequence can still load in the background, while Skip
+  // Intro always remains available for anyone who wants the home page now.
   document.documentElement.classList.add("intro-loading-lock");
   skipIntro.disabled = false;
   let lenis = null;
@@ -113,20 +115,24 @@
       scheduleDraw();
     }
 
-   
+    // In the final moment, fade in the complete landing page and navbar as
+    // one composition. Keep it there until the real landing section reaches
+    // the viewport; don't reveal a lone PHOENIX title.
     const reachedLanding = window.scrollY >= intro.offsetTop + intro.offsetHeight - 1;
     const previewLanding = !reachedLanding && targetProgress >= 0.99;
     document.body.classList.toggle("landing-preview", previewLanding);
     document.body.classList.toggle("landing-revealed", reachedLanding);
   }
 
+  // Lenis smooths the page's native scrolling. Its scroll event also drives
+  // the canvas sequence so frame changes stay synced with the smoothed scroll.
   if (typeof window.Lenis === "function") {
     lenis = new window.Lenis({
       autoRaf: true,
       anchors: true,
       allowNestedScroll: true,
       stopInertiaOnNavigate: true,
-      
+      // Keep wheel input responsive without making the cinematic scrub feel jumpy.
       lerp: 0.11,
       wheelMultiplier: 1,
       touchMultiplier: 1
@@ -145,7 +151,9 @@
     }
   }
   function skipIntroSequence() {
-    
+    // Skip moves to Home without removing the cinematic section. This keeps
+    // the frame-by-frame animation available whenever the visitor scrolls
+    // back to the top or reloads the site.
     loader.hidden = true;
     document.documentElement.classList.remove("intro-loading-lock");
     if (lenis) lenis.start();
@@ -165,7 +173,8 @@
               settleFirstFrameReady(true);
               frameWarning.hidden = true;
             }
-            
+            // A frame may finish loading after the scroll has already reached it.
+            // Redraw on completion so the canvas never stays black or frozen there.
             if (index === currentFrame) {
               lastDrawn = -1;
               scheduleDraw();
@@ -182,7 +191,7 @@
           failed++;
           console.warn("Could not load frame:", FRAME_PATH(index));
         } else {
-          
+          // Decode before the user can scrub to this frame, avoiding decode stutters.
           try { await image.decode(); } catch (_) { /* Some browsers decode on draw. */ }
           if (index === currentFrame) {
             lastDrawn = -1;
@@ -203,7 +212,9 @@
   }
 
   async function startFrameLoading() {
-    
+    // Start all frame workers immediately, but don't wait for ~20 MB of assets.
+    // The intro becomes usable as soon as frame 1 is available; the rest load
+    // in the background and redraw themselves if the visitor has scrubbed ahead.
     const workerCount = Math.min(6, FRAME_COUNT);
     const loading = Promise.all(Array.from({ length: workerCount }, () => loadWorker()));
     loading.catch((error) => console.warn("Intro frame loading stopped:", error));
@@ -272,7 +283,8 @@
     if (["Home", "Graveyard", "Under Revival", "Memorial Garden", "Hall of Fame"].includes(page)) currentFilter = page;
     if (isTombstone) currentFilter = "Graveyard";
     document.body.classList.toggle("page-view-open", !isHome);
-    
+    // Clicking Home from a dashboard should show the actual landing page,
+    // not return to the dark cinematic intro or leave the hero hidden.
     document.body.classList.toggle("home-direct", isHome);
     if (isHome) {
       document.body.classList.add("landing-revealed");
@@ -326,4 +338,98 @@
       if (lenis) lenis.stop();
       window.scrollTo({ top: 0, behavior: "instant" });
     }
+<<<<<<< HEAD
   
+=======
+  }
+  function renderProjects() {
+    const navSearchInput = document.getElementById("searchInput");
+    const navQuery = navSearchInput ? navSearchInput.value.toLowerCase().trim() : "";
+    const graveyardSearch = document.getElementById("graveyardSearch");
+    const localQuery = graveyardSearch ? graveyardSearch.value.toLowerCase().trim() : "";
+    const query = localQuery || navQuery;
+    const language = document.getElementById("languageFilter").value;
+    const sort = document.getElementById("graveyardSort")?.value || "popular";
+    const list = projects.filter((project) => {
+      const statusMatch = currentFilter === "Home" || project.status === currentFilter;
+      const queryMatch = !query || `${project.name} ${project.description} ${project.language} ${project.needs.join(" ")}`.toLowerCase().includes(query);
+      const langMatch = !language || project.language === language;
+      return statusMatch && queryMatch && langMatch;
+    });
+    if (currentFilter === "Graveyard") {
+      list.sort((a, b) => {
+        const av = getProjectVotes(a.id), bv = getProjectVotes(b.id);
+        if (sort === "disliked") return bv.dislikes - av.dislikes || a.name.localeCompare(b.name);
+        if (sort === "name") return a.name.localeCompare(b.name);
+        if (sort === "recent") return a.lastCommit.localeCompare(b.lastCommit);
+        return bv.likes - av.likes || a.name.localeCompare(b.name);
+      });
+    }
+    const grid = document.getElementById("projectGrid");
+    grid.innerHTML = "";
+    if (!list.length) {
+      grid.innerHTML = '<div class="empty-state"><span>🪦</span><h3>No projects found</h3><p>Try another search or add a project to the Graveyard.</p></div>';
+      return;
+    }
+    list.forEach((project) => {
+      const card = document.createElement("article");
+      card.className = `project-card${currentFilter === "Graveyard" ? " graveyard-card" : ""}`;
+      const artClass = `art-${project.id % 4}`;
+      card.innerHTML = `
+        <div class="project-art ${artClass}"><span class="art-moon"></span><span class="art-gate">✦</span><span class="art-candle">🕯</span><span class="project-status">${escapeHTML(project.status)}</span></div>
+        <div class="project-card-body">
+          <div class="project-title-row"><h3>${escapeHTML(project.name)}</h3><span class="language-dot">${escapeHTML(project.language.slice(0,2))}</span></div>
+          <p>${escapeHTML(project.description)}</p>
+          <div class="project-meta"><span>◷ ${escapeHTML(project.lastCommit)}</span><span>★ ${project.stars}</span></div>
+          <div class="tag-row">${project.needs.slice(0,2).map((n) => `<span class="tag">${escapeHTML(n)}</span>`).join("")}</div>
+          ${currentFilter === "Graveyard" ? `<div class="vote-actions" aria-label="Rate ${escapeHTML(project.name)}"><button class="vote-button like" type="button" aria-pressed="false" aria-label="Like project">♥ <span class="vote-count">0</span></button><button class="vote-button dislike" type="button" aria-pressed="false" aria-label="Dislike project">▾ <span class="vote-count">0</span></button><button class="card-action" type="button">View tombstone <span>↗</span></button></div>` : `<button class="card-action" type="button">View tombstone <span>↗</span></button>`}
+        </div>`;
+      if (currentFilter === "Graveyard") {
+        const engraving = document.createElement("div");
+        engraving.className = "graveyard-engraving";
+        engraving.innerHTML = `<strong>${escapeHTML(project.name)}</strong><p>${escapeHTML(project.description)}</p><span>${escapeHTML(project.language)}</span>`;
+        card.querySelector(".project-art").append(engraving);
+        const referenceArt = document.createElement("img");
+        referenceArt.className = "graveyard-reference-art";
+        referenceArt.src = "assets/graveyard-reference/tombstone-background.jpg";
+        referenceArt.alt = `${project.name} tombstone in a candlelit graveyard`;
+        card.querySelector(".project-art").prepend(referenceArt);
+        card.querySelector(".project-title-row").hidden = true;
+        const votes = getProjectVotes(project.id);
+        const like = card.querySelector(".vote-button.like"), dislike = card.querySelector(".vote-button.dislike");
+        like.querySelector(".vote-count").textContent = votes.likes;
+        dislike.querySelector(".vote-count").textContent = votes.dislikes;
+        like.setAttribute("aria-pressed", votes.vote === "like");
+        dislike.setAttribute("aria-pressed", votes.vote === "dislike");
+        like.addEventListener("click", () => voteForProject(project.id, "like"));
+        dislike.addEventListener("click", () => voteForProject(project.id, "dislike"));
+      }
+      const cardAction = card.querySelector(".card-action");
+      cardAction.addEventListener("click", () => openProjectDetails(project.id));
+      const projectArt = card.querySelector(".project-art");
+      projectArt.tabIndex = 0;
+      projectArt.setAttribute("role", "button");
+      projectArt.setAttribute("aria-label", `Open ${project.name} tombstone`);
+      projectArt.addEventListener("click", () => openProjectDetails(project.id));
+      projectArt.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" || event.key === " ") { event.preventDefault(); openProjectDetails(project.id); }
+      });
+      grid.appendChild(card);
+    });
+    document.getElementById("graveyardCount").textContent = "1,248";
+    document.getElementById("revivedCount").textContent = "312";
+  }
+  function renderMemorialGarden() {
+    const search = document.getElementById("memorialSearch").value.trim().toLowerCase();
+    const sort = document.getElementById("memorialSort").value;
+    const revived = projects.filter((project) => {
+      const matchesSearch = !search || `${project.name} ${project.description} ${project.language} ${project.gardenTech || ""}`.toLowerCase().includes(search);
+      return project.status === "Memorial Garden" && matchesSearch;
+    });
+    revived.sort((a, b) => {
+      if (sort === "name") return a.name.localeCompare(b.name);
+      if (sort === "popular") return b.stars - a.stars;
+      return a.id - b.id;
+    });
+    
+>>>>>>> edbd0b5b0a4469101b44f7a24a3f40842a6b5f09
