@@ -338,6 +338,9 @@
       if (lenis) lenis.stop();
       window.scrollTo({ top: 0, behavior: "instant" });
     }
+<<<<<<< HEAD
+  
+=======
   }
   function renderProjects() {
     const navSearchInput = document.getElementById("searchInput");
@@ -428,5 +431,10 @@
       if (sort === "popular") return b.stars - a.stars;
       return a.id - b.id;
     });
+<<<<<<< HEAD
   }
 }
+=======
+    
+>>>>>>> edbd0b5b0a4469101b44f7a24a3f40842a6b5f09
+>>>>>>> c9139658fc3ceb6ef2f1a6875d3b5f8e5fc382f7
